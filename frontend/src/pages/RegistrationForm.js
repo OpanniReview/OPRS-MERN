@@ -19,10 +19,7 @@ const Registerationform = () => {
       name: data.get('name'),
       gender: data.get('gender'),
       dob: data.get('dob'),
-      additionalEmails: additionalEmails,
-      personalLinks: personalLinks,
       educationStatus: data.get('educationStatus'),
-      degreesCompleted: degreesCompleted,
       degreesPursuing: data.get('degreesPursuing'),
       expectedGraduationYear: data.get('expectedGraduationYear'),
     });
