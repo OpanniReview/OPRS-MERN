@@ -1,28 +1,60 @@
 const express = require("express");
 const Credential = require("../models/credentialSchema");
+const bcrypt = require('bcrypt')
+const validator = require('validator')
 
 const router = express.Router();
 
 // Functions to access database - queries
 router.post("/register", async (req, res) => {
-  const { username, password } = req.body;
+  const email = req.body.login_id;
+  const password = req.body.password;
+
+  console.log(req.body);
+
+
   try {
-    const credential = await Credential.create({ username, password });
-    res.status(200).json(credential);
+    if (!email || !password) {
+      throw Error('All fields must be filled')
+    }
+    if (!validator.isEmail(email)) {
+      throw Error('Email not valid')
+    }
+    if (!validator.isStrongPassword(password)) {
+      throw Error('Password not strong enough')
+    }
+
+    const exists = await Credential.findOne({ login_id:email })
+
+    if (exists) {
+      throw Error('Email already in use')
+    }
+
+    if (!(email.includes(".edu") || email.includes(".ac"))) {
+      throw Error("Email is not from educational institution")
+    }
+
+    const salt = await bcrypt.genSalt(10)
+    const hash = await bcrypt.hash(password, salt)
+
+    const credential = await Credential.create({ login_id:email, password:hash });
+    res.json({status: !(!(credential))});
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.log(error.message)
+    res.json({ status: false });
   }
 });
 
 router.post("/signin", async (req, res) => {
-  const { username, password } = req.body;
+
   try {
-    const record = await Credential.findOne({ username: username });
-    if (record.password === password) {
-      res.json({ status: true });
-    } else {
-      res.json({ status: false });
+    const record = await Credential.findOne({ login_id: req.body.login_id});
+    console.log(record);
+
+    if (record) {
+      res.json({status: await bcrypt.compare(req.body.password, record.password)})
     }
+    else res.json({status: false})
   } catch (error) {
     console.log(error);
     res.json({ status: false });

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const credentialSchema = new mongoose.Schema({
-    username: {
+    login_id: {
       type: String,
       unique: true,
       required: true,
@@ -10,6 +10,6 @@ const credentialSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-  }, {timestamps: true});
+  }, { timestamps: true });
   
 module.exports = mongoose.model('Credential', credentialSchema)

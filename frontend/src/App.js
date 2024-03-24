@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Redirect } from 'react-router-dom';
 import Login from './pages/Login';
 import Registerationform from './pages/RegistrationForm';
 import Register from './pages/Register';

@@ -11,16 +11,34 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
 const Register = () => {
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      firstName: data.get('firstName'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-    // Handle registration logic here
+    const firstName= data.get('firstName')
+    const lastName= data.get('lastName')
+    const email= data.get('email')
+    const password = data.get('password')
+
+    try {
+      let result = await fetch(
+        'http://localhost:5000/register', {
+          method: "post",
+          body: JSON.stringify({ login_id: email, password: password}),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        result = await result.json();
+
+        if (result.status) {
+          console.log("Signup Success");
+        } else {
+          console.log("Signup Fail");
+        }
+
+    } catch(error) {
+      console.log(error);
+    }
   };
 
   return (

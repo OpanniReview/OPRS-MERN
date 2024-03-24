@@ -13,15 +13,35 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
 const Login = () => {
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-    // Handle login logic here
-  };
+    const email= data.get("email")
+    const password= data.get("password")
+
+    console.log({email, password});
+    
+    try {
+      let result = await fetch(
+        'http://localhost:5000/signin', {
+          method: "post",
+          body: JSON.stringify({ login_id: email, password: password}),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        result = await result.json();
+
+        if (result.status) {
+          console.log("Signin Success");
+        } else {
+          console.log("Signin Fail");
+        }
+
+    } catch(error) {
+      console.log(error);
+    }
+    }
 
   return (
     <Container component="main" maxWidth="xs" sx={{ mt: 4, mb: 4 }}>
