@@ -91,60 +91,33 @@ const Registerationform = () => {
                 helperText="Please provide your date of birth."
               />
             </Grid>
-            {additionalEmails.map((email, index) => (
-              <Grid item xs={12} key={index}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  name={`additionalEmail${index + 1}`}
-                  id={`additionalEmail${index + 1}`}
-                  label={`Additional Email ${index + 1}`}
-                  value={email}
-                  onChange={(e) => {
-                    const updatedEmails = [...additionalEmails];
-                    updatedEmails[index] = e.target.value;
-                    setAdditionalEmails(updatedEmails);
-                  }}
-                />
-                <Button onClick={() => handleRemoveField(index, setAdditionalEmails)}>Remove</Button>
+                  name="emails"
+                  id="emails"
+                  label="Emails"
+                  helperText="Please provide your alternate email"
+                    />
               </Grid>
-            ))}
-            <Button onClick={() => handleAddField(setAdditionalEmails)}>Add Additional Email</Button>
-            {degreesCompleted.map((degree, index) => (
-              <Grid item xs={12} key={index}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  name={`degreeCompleted${index + 1}`}
-                  id={`degreeCompleted${index + 1}`}
-                  label={`Degree Completed ${index + 1}`}
-                  value={degree}
-                  onChange={(e) => {
-                    const updatedDegrees = [...degreesCompleted];
-                    updatedDegrees[index] = e.target.value;
-                    setDegreesCompleted(updatedDegrees);
-                  }}
-                />
-                <Button onClick={() => handleRemoveField(index, setDegreesCompleted)}>Remove</Button>
+                  name="degrees"
+                  id="degrees"
+                  label="Degrees Completed"
+                  helperText="Please provide your highest degree completed"
+                    />
               </Grid>
-            ))}
-            <Button onClick={() => handleAddField(setDegreesCompleted)}>Add Completed Degree</Button>
-            {personalLinks.map((link, index) => (
-              <Grid item xs={12} key={index}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  name={`personalLink${index + 1}`}
-                  id={`personalLink${index + 1}`}
-                  label={`Personal Link ${index + 1}`}
-                  value={link}
-                  onChange={(e) => {
-                    const updatedLinks = [...personalLinks];
-                    updatedLinks[index] = e.target.value;
-                    setPersonalLinks(updatedLinks);
-                  }}
+                  name="personalLinks"
+                  id="personalLinks"
+                  label="Personal Links"
+                  helperText="Please provide your personal link (LinkedIn, Twitter, Github etc.)"
                 />
-                <Button onClick={() => handleRemoveField(index, setPersonalLinks)}>Remove</Button>
               </Grid>
-            ))}
-            <Button onClick={() => handleAddField(setPersonalLinks)}>Add Personal Link</Button>
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -182,13 +155,6 @@ const Registerationform = () => {
           >
             Register
           </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Link href="/login" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
         </Box>
       </Box>
     </Container>

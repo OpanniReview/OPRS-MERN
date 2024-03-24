@@ -21,7 +21,7 @@ const Register = () => {
 
     try {
       let result = await fetch(
-        'http://localhost:5000/register', {
+        'http://localhost:4000/register', {
           method: "post",
           body: JSON.stringify({ login_id: email, password: password}),
           headers: {
