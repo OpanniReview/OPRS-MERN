@@ -11,17 +11,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
 const Registerationform = () => {
-  const [additionalEmails, setAdditionalEmails] = useState(['']);
-  const [degreesCompleted, setDegreesCompleted] = useState(['']);
-  const [personalLinks, setPersonalLinks] = useState(['']);
-
-  const handleAddField = (setState) => {
-    setState([...setState, '']);
-  };
-
-  const handleRemoveField = (index, setState) => {
-    setState((prevState) => prevState.filter((_, i) => i !== index));
-  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
