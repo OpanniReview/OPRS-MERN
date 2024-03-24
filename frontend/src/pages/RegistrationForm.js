@@ -9,8 +9,15 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 const Registerationform = () => {
+  const [professionalStatus, setProfessionalStatus] = useState('');
+  const [gender, setGender] = useState('');
+  const [degree, setDegree] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -19,11 +26,13 @@ const Registerationform = () => {
       name: data.get('name'),
       gender: data.get('gender'),
       dob: data.get('dob'),
-      educationStatus: data.get('educationStatus'),
-      degreesPursuing: data.get('degreesPursuing'),
-      expectedGraduationYear: data.get('expectedGraduationYear'),
+      professionalStatus: professionalStatus,
     });
-    // Handle registration logic here
+    console.log(data)
+  };
+
+  const handleChange = (e, setState) => {
+    setState(e.target.value)
   };
 
   return (
@@ -58,13 +67,30 @@ const Registerationform = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
+              {/* <TextField
                 fullWidth
                 name="gender"
                 id="gender"
                 label="Gender"
                 helperText="Please specify your gender."
-              />
+              /> */}
+              <FormControl fullWidth>
+                <InputLabel 
+                  id="gender"
+                  >Gender</InputLabel>
+                  
+                <Select
+                  labelId="gender"
+                  id="select"
+                  value={gender}
+                  label="Gender"
+                  onChange={() => handleChange(setGender)}
+                  >
+                  <MenuItem value={"Male"}>Male</MenuItem>
+                  <MenuItem value={"Female"}>Female</MenuItem>
+                  <MenuItem value={"Other"}>Other</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -87,13 +113,34 @@ const Registerationform = () => {
                     />
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                {/* <TextField
                   fullWidth
                   name="degrees"
                   id="degrees"
-                  label="Degrees Completed"
+                  label="Highest Degree Completed"
                   helperText="Please provide your highest degree completed"
-                    />
+                    /> */}
+                <FormControl fullWidth>
+                  <InputLabel 
+                    id="degree"
+                    >Highest Degree Completed</InputLabel>
+                  
+                  <Select
+                    labelId="degree"
+                    id="select"
+                    value={degree}
+                    label="Highest Degree Completed"
+                    onChange={() => handleChange(setDegree)}
+                    >
+                    <MenuItem value={"PhD"}>PhD</MenuItem>
+                    <MenuItem value={"PG"}>PG</MenuItem>
+                    <MenuItem value={"UG"}>UG</MenuItem>
+                    <MenuItem value={"Diploma"}>Diploma</MenuItem>
+                    <MenuItem value={"Higher-Secondary-School"}>Higher Secondary School</MenuItem>
+                    <MenuItem value={"High-School"}>High School</MenuItem>
+                    <MenuItem value={"Other"}>Other</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -105,32 +152,24 @@ const Registerationform = () => {
                 />
               </Grid>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                name="educationStatus"
-                id="educationStatus"
-                label="Education Status"
-                helperText="Please specify your current education status (e.g., student, professor, etc.)."
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                name="degreesPursuing"
-                id="degreesPursuing"
-                label="Degrees Pursuing"
-                helperText="Please list the degrees you are currently pursuing."
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                name="expectedGraduationYear"
-                id="expectedGraduationYear"
-                label="Expected Graduation Year"
-                type="number"
-                helperText="Please specify your expected year of graduation."
-              />
+              <FormControl fullWidth>
+                <InputLabel 
+                  id="professionalStatus"
+                  >Professional Status</InputLabel>
+                  
+                <Select
+                  labelId="professionalStatus"
+                  id="select"
+                  value={professionalStatus}
+                  label="Professional Status"
+                  onChange={() => handleChange(setProfessionalStatus)}
+                  >
+                  <MenuItem value={"Professor"}>Professor</MenuItem>
+                  <MenuItem value={"Student"}>Student</MenuItem>
+                  <MenuItem value={"Corporate"}>Corporate</MenuItem>
+                  <MenuItem value={"Other"}>Other</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
           <Button
