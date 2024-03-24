@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,6 +11,18 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
 const Registerationform = () => {
+  const [additionalEmails, setAdditionalEmails] = useState(['']);
+  const [degreesCompleted, setDegreesCompleted] = useState(['']);
+  const [personalLinks, setPersonalLinks] = useState(['']);
+
+  const handleAddField = (setState) => {
+    setState([...setState, '']);
+  };
+
+  const handleRemoveField = (index, setState) => {
+    setState((prevState) => prevState.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -18,10 +30,10 @@ const Registerationform = () => {
       name: data.get('name'),
       gender: data.get('gender'),
       dob: data.get('dob'),
-      additionalEmails: data.getAll('additionalEmails'),
-      personalLinks: data.getAll('personalLinks'),
+      additionalEmails: additionalEmails,
+      personalLinks: personalLinks,
       educationStatus: data.get('educationStatus'),
-      degreesCompleted: data.get('degreesCompleted'),
+      degreesCompleted: degreesCompleted,
       degreesPursuing: data.get('degreesPursuing'),
       expectedGraduationYear: data.get('expectedGraduationYear'),
     });
@@ -79,26 +91,60 @@ const Registerationform = () => {
                 helperText="Please provide your date of birth."
               />
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                name="additionalEmails"
-                id="additionalEmails"
-                label="Additional Emails"
-                helperText="Please add any additional email addresses you wish to associate with this account."
-                InputProps={{ inputProps: { multiple: true } }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                name="personalLinks"
-                id="personalLinks"
-                label="Personal Links"
-                helperText="Please provide links to your personal profiles (e.g., LinkedIn, Twitter, etc.)."
-                InputProps={{ inputProps: { multiple: true } }}
-              />
-            </Grid>
+            {additionalEmails.map((email, index) => (
+              <Grid item xs={12} key={index}>
+                <TextField
+                  fullWidth
+                  name={`additionalEmail${index + 1}`}
+                  id={`additionalEmail${index + 1}`}
+                  label={`Additional Email ${index + 1}`}
+                  value={email}
+                  onChange={(e) => {
+                    const updatedEmails = [...additionalEmails];
+                    updatedEmails[index] = e.target.value;
+                    setAdditionalEmails(updatedEmails);
+                  }}
+                />
+                <Button onClick={() => handleRemoveField(index, setAdditionalEmails)}>Remove</Button>
+              </Grid>
+            ))}
+            <Button onClick={() => handleAddField(setAdditionalEmails)}>Add Additional Email</Button>
+            {degreesCompleted.map((degree, index) => (
+              <Grid item xs={12} key={index}>
+                <TextField
+                  fullWidth
+                  name={`degreeCompleted${index + 1}`}
+                  id={`degreeCompleted${index + 1}`}
+                  label={`Degree Completed ${index + 1}`}
+                  value={degree}
+                  onChange={(e) => {
+                    const updatedDegrees = [...degreesCompleted];
+                    updatedDegrees[index] = e.target.value;
+                    setDegreesCompleted(updatedDegrees);
+                  }}
+                />
+                <Button onClick={() => handleRemoveField(index, setDegreesCompleted)}>Remove</Button>
+              </Grid>
+            ))}
+            <Button onClick={() => handleAddField(setDegreesCompleted)}>Add Completed Degree</Button>
+            {personalLinks.map((link, index) => (
+              <Grid item xs={12} key={index}>
+                <TextField
+                  fullWidth
+                  name={`personalLink${index + 1}`}
+                  id={`personalLink${index + 1}`}
+                  label={`Personal Link ${index + 1}`}
+                  value={link}
+                  onChange={(e) => {
+                    const updatedLinks = [...personalLinks];
+                    updatedLinks[index] = e.target.value;
+                    setPersonalLinks(updatedLinks);
+                  }}
+                />
+                <Button onClick={() => handleRemoveField(index, setPersonalLinks)}>Remove</Button>
+              </Grid>
+            ))}
+            <Button onClick={() => handleAddField(setPersonalLinks)}>Add Personal Link</Button>
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -106,15 +152,6 @@ const Registerationform = () => {
                 id="educationStatus"
                 label="Education Status"
                 helperText="Please specify your current education status (e.g., student, professor, etc.)."
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                name="degreesCompleted"
-                id="degreesCompleted"
-                label="Degrees Completed"
-                helperText="Please list the degrees you have completed."
               />
             </Grid>
             <Grid item xs={12}>
