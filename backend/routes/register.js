@@ -6,7 +6,7 @@ const validator = require('validator')
 const router = express.Router();
 
 // Functions to access database - queries
-router.post("/register", async (req, res) => {
+router.post("/signup", async (req, res) => {
   const email = req.body.login_id;
   const password = req.body.password;
 
@@ -60,5 +60,9 @@ router.post("/signin", async (req, res) => {
     res.json({ status: false });
   }
 });
+
+router.post("/signup", async (req, res) => {
+  
+})
 
 module.exports = router;
