@@ -9,9 +9,11 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import  { redirect, useNavigate } from 'react-router-dom';
 
 const Register = () => {
-  const handleSubmit = async(event) => {
+  const navigate = useNavigate();
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const firstName= data.get('firstName')
@@ -39,6 +41,9 @@ const Register = () => {
     } catch(error) {
       console.log(error);
     }
+    navigate('../register');
+    console.log('yay')
+
   };
 
   return (
