@@ -11,9 +11,6 @@ router.post("/signup", async (req, res) => {
   const email = req.body.login_id;
   const password = req.body.password;
 
-  console.log(req.body);
-
-
   try {
     if (!email || !password) {
       throw Error('All fields must be filled')
