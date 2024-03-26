@@ -19,16 +19,34 @@ const Registerationform = () => {
   const [gender, setGender] = useState('');
   const [degree, setDegree] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      gender: data.get('gender'),
-      dob: data.get('dob'),
-      professionalStatus: professionalStatus,
-    });
-    console.log(data)
+    const name= data.get('name')
+    const gender= data.get('gender')
+    const dob = data.get('dob')
+    const professionalStatus= data.get("professionalStatus");
+
+    try {
+      let result = await fetch(
+        'http://localhost:4000/signup', {
+          method: "post",
+          body: JSON.stringify({ login_id: email, password: password}),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        result = await result.json();
+
+        if (result.status) {
+          console.log("Signup Success");
+        } else {
+          console.log("Signup Fail");
+        }
+
+    } catch(error) {
+      console.log(error);
+    }
   };
 
   const handleChange = (e, setState) => {

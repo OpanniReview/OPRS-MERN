@@ -19,11 +19,11 @@ function App() {
               element = {<Login />}
             />
             <Route 
-              path = "/register"
+              path = "/signup"
               element = {<Register />}
             />
             <Route 
-              path = "/register2"
+              path = "/register"
               element = {<Registerationform />}
             />
             <Route 
