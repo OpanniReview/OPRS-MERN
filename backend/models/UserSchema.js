@@ -36,26 +36,16 @@ const UserSchema = new mongoose.Schema({
   professional_status: {
     type: String,
     required: true
-  }, 
-  blogs_and_comments: {
-    type: [{
-      title: {
-        type: String,
-        required: true
-      },
+  },
+  blogs_and_comments: [{
+      title: String,
       pdf: {
         name: String,
-        data: Buffer,
-        required: true
+        data: Buffer
       },
-      description: {
-        type: String
-      },
-      comments: {
-        type: [String],
-      }
+      description: String,
+      comments: [String],
     }]
-  }
 }, { timestamps: true });
   
 module.exports = mongoose.model('Blogs', UserSchema)
