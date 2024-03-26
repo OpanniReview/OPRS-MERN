@@ -3,6 +3,7 @@ import Login from './pages/Login';
 import Registerationform from './pages/RegistrationForm';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import UploadPage from './pages/UploadPage';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -28,6 +29,10 @@ function App() {
             <Route 
               path = "/dashboard"
               element = {<Dashboard />}
+            />
+            <Route 
+              path = "/upload"
+              element = {<UploadPage />}
             />
           </Routes>
         </BrowserRouter>
