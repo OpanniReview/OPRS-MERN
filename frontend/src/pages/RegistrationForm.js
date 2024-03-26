@@ -27,26 +27,6 @@ const Registerationform = () => {
     const dob = data.get('dob')
     const professionalStatus= data.get("professionalStatus");
 
-    try {
-      let result = await fetch(
-        'http://localhost:4000/signup', {
-          method: "post",
-          body: JSON.stringify({ login_id: email, password: password}),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        result = await result.json();
-
-        if (result.status) {
-          console.log("Signup Success");
-        } else {
-          console.log("Signup Fail");
-        }
-
-    } catch(error) {
-      console.log(error);
-    }
   };
 
   const handleChange = (e, setState) => {
@@ -195,6 +175,7 @@ const Registerationform = () => {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            Link="\dashboard"
           >
             Register
           </Button>
