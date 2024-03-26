@@ -1,5 +1,6 @@
 const express = require("express");
 const Credential = require("../models/credentialSchema");
+const User = require("../models/UserSchema");
 const bcrypt = require('bcrypt')
 const validator = require('validator')
 
@@ -61,8 +62,49 @@ router.post("/signin", async (req, res) => {
   }
 });
 
-router.post("/signup", async (req, res) => {
-  
+router.post("/register", async (req, res) => {
+  const login_id = req.body.login_id;
+  const first_name = req.body.first_name;
+  const last_name = req.body.last_name;
+  const dob = req.body.dob;
+  const gender = req.body.gender;
+  const email = req.body.email;
+  const degree = req.body.degree;
+  const personal_link = req.body.personal_link;
+  const profession = req.body.profession;
+
+  try {
+    if (!first_name || !last_name || !gender || !degree || !profession) {
+      throw Error("All compulsory fields should be filled")
+    }
+
+    if (!/[^a-zA-Z]/.test(first_name) || !/[^a-zA-Z]/.test(last_name)) {
+      throw Error("Name cannot include numbers or special characters")
+    }
+
+    if (email && !validator.isEmail(email)) {
+      throw Error('Email not valid')
+    }
+
+    try {
+      const isURL = new URL(personal_link);
+    } catch {
+      throw Error("Invalid Presonal link provided")
+    }
+
+    try {
+      const isDate = new Date(dob);
+    } catch {
+      throw Error("Invalid DOB");
+    }
+
+    const user = await User.create({ login_id: login_id, first_name: first_name, last_name: last_name, dob: dob, additional_email: email, degrees_completed: degree, personal_links: personal_link, professional_status: profession});
+    res.json({status: !(!(user))});
+  } catch (error) {
+    console.log(error.message)
+    res.json({ status: false });
+  }
+
 })
 
 module.exports = router;
