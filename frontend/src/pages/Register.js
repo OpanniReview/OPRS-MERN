@@ -16,8 +16,8 @@ const Register = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const firstName= data.get('firstName')
-    const lastName= data.get('lastName')
+    const first_name= data.get('firstName')
+    const last_name= data.get('lastName')
     const email= data.get('email')
     const password = data.get('password')
 
@@ -33,7 +33,7 @@ const Register = () => {
         result = await result.json();
 
         if (result.status) {
-          console.log("Signup Success");
+          navigate('/register', {replace: true, state: {email, first_name, last_name}});
         } else {
           console.log("Signup Fail");
         }
