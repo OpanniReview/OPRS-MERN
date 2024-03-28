@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard';
 import UploadPage from './pages/UploadPage';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ReviewPage from './pages/ReviewPage';
+
 
 function App() {
   return (
@@ -34,6 +36,10 @@ function App() {
             <Route 
               path = "/upload"
               element = {<UploadPage />}
+            />
+            <Route 
+              path = "/review"
+              element = {<ReviewPage />}
             />
           </Routes>
         </BrowserRouter>
