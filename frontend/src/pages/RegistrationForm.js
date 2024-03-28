@@ -3,7 +3,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
+import link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -13,20 +13,48 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Registerationform = () => {
   const [professionalStatus, setProfessionalStatus] = useState('');
   const [gender, setGender] = useState('');
   const [degree, setDegree] = useState('');
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const login_id = location.state.email;
+  const first_name = location.state.first_name;
+  const last_name = location.state.last_name;
+  const [name, setName] = useState(first_name + " " + last_name);
+
   const handleSubmit = async(event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const name= data.get('name')
-    const gender= data.get('gender')
     const dob = data.get('dob')
-    const professionalStatus= data.get("professionalStatus");
+    const email = data.get('emails')
+    const personal_link = data.get('personalLinks')
 
+    try {
+      let result = await fetch(
+        'http://localhost:4000/register', {
+          method: "post",
+          body: JSON.stringify({login_id, name, gender, dob, email, degree, personal_link, professionalStatus}),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        result = await result.json();
+
+        if (result.status) {
+          navigate('/dashboard', {required: true, state: {login_id}});
+        } else {
+          console.log("Register Fail");
+        }
+
+    } catch(error) {
+      console.log(error);
+    }
   };
 
   const handleChange = (e, setState) => {
@@ -56,12 +84,14 @@ const Registerationform = () => {
               <TextField
                 autoComplete="name"
                 name="name"
+                value = {name}
                 required
                 fullWidth
                 id="name"
                 label="Name"
                 autoFocus
                 helperText="Please enter your full name."
+                onChange={(event) => handleChange(event, setName)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -82,7 +112,7 @@ const Registerationform = () => {
                   id="select"
                   value={gender}
                   label="Gender"
-                  onChange={() => handleChange(setGender)}
+                  onChange={(event) => handleChange(event, setGender)}
                   >
                   <MenuItem value={"Male"}>Male</MenuItem>
                   <MenuItem value={"Female"}>Female</MenuItem>
@@ -128,7 +158,7 @@ const Registerationform = () => {
                     id="select"
                     value={degree}
                     label="Highest Degree Completed"
-                    onChange={() => handleChange(setDegree)}
+                    onChange={(event) => handleChange(event, setDegree)}
                     >
                     <MenuItem value={"PhD"}>PhD</MenuItem>
                     <MenuItem value={"PG"}>PG</MenuItem>
@@ -160,7 +190,7 @@ const Registerationform = () => {
                   id="select"
                   value={professionalStatus}
                   label="Professional Status"
-                  onChange={() => handleChange(setProfessionalStatus)}
+                  onChange={(event) => handleChange(event, setProfessionalStatus)}
                   >
                   <MenuItem value={"Professor"}>Professor</MenuItem>
                   <MenuItem value={"Student"}>Student</MenuItem>
@@ -175,7 +205,7 @@ const Registerationform = () => {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            Link="\dashboard"
+            link="\dashboard"
           >
             Register
           </Button>

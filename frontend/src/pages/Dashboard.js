@@ -5,8 +5,15 @@ import Typography from '@mui/material/Typography';
 import AppBar from '@mui/material/AppBar';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import { useLocation } from 'react-router-dom';
 
 const Dashboard = () => {
+
+  let location = useLocation();
+
+  const login_id = location.state.login_id;
+  // console.log(login_id);
+
   // Dummy data for blogs (replace with your actual data)
   const publishedBlogs = [
     { title: 'Published Blog 1', dateWritten: '2022-03-25', coAuthors: ['Author 1', 'Author 2'] },

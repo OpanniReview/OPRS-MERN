@@ -61,30 +61,30 @@ router.post("/signin", async (req, res) => {
 
 router.post("/register", async (req, res) => {
   const login_id = req.body.login_id;
-  const first_name = req.body.first_name;
-  const last_name = req.body.last_name;
+  const first_name = req.body.name;
+  const last_name = req.body.name;
   const dob = req.body.dob;
   const gender = req.body.gender;
   const email = req.body.email;
   const degree = req.body.degree;
   const personal_link = req.body.personal_link;
-  const profession = req.body.profession;
+  const profession = req.body.professionalStatus;
 
   try {
     if (!first_name || !last_name || !gender || !degree || !profession) {
       throw Error("All compulsory fields should be filled")
     }
 
-    if (!/[^a-zA-Z]/.test(first_name) || !/[^a-zA-Z]/.test(last_name)) {
-      throw Error("Name cannot include numbers or special characters")
-    }
+    // if (!/[^a-zA-Z]/.test(first_name) || !/[^a-zA-Z]/.test(last_name)) {
+    //   throw Error("Name cannot include numbers or special characters")
+    // }
 
     if (email && !validator.isEmail(email)) {
       throw Error('Email not valid')
     }
 
     try {
-      const isURL = new URL(personal_link);
+      if (personal_link) {const isURL = new URL(personal_link);}
     } catch {
       throw Error("Invalid Presonal link provided")
     }
@@ -95,7 +95,7 @@ router.post("/register", async (req, res) => {
       throw Error("Invalid DOB");
     }
 
-    const user = await User.create({ login_id: login_id, first_name: first_name, last_name: last_name, dob: dob, additional_email: email, degrees_completed: degree, personal_links: personal_link, professional_status: profession});
+    const user = await User.create({ login_id: login_id, first_name: first_name, last_name: last_name, gender: gender, dob: dob, additional_email: email, degrees_completed: degree, personal_links: personal_link, professional_status: profession});
     res.json({status: !(!(user))});
   } catch (error) {
     console.log(error.message)
