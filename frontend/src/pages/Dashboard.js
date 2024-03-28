@@ -5,6 +5,9 @@ import Typography from '@mui/material/Typography';
 import AppBar from '@mui/material/AppBar';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+
+import NotificationsPage from '../components/Notifications';
+
 import { useLocation } from 'react-router-dom';
 
 const Dashboard = () => {
@@ -38,8 +41,7 @@ const Dashboard = () => {
       <Grid container spacing={2}>
         {/* Left column */}
         <Grid item xs={12} md={4}>
-          {/* Left column content goes here */}
-          {/* Currently empty */}
+          <NotificationsPage />
         </Grid>
         {/* Right column */}
         <Grid item xs={12} md={8}>
