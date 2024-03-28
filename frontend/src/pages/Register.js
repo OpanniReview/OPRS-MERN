@@ -35,6 +35,7 @@ const Register = () => {
         result = await result.json();
 
         if (result.status) {
+          console.log({email, first_name, last_name})
           navigate('/register', {replace: true, state: {email, first_name, last_name}});
         } else {
           console.log("Signup Fail");
@@ -43,9 +44,6 @@ const Register = () => {
     } catch(error) {
       console.log(error);
     }
-    navigate('../register');
-    console.log('yay')
-
   };
 
   return (
