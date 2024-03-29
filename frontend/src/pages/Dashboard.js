@@ -11,7 +11,7 @@ const Dashboard = () => {
 
   let location = useLocation();
 
-  let login_id = "rishabh8124@kgpain.iitkgp.ac.in"
+  let login_id = "rishabh8124@kgpian.iitkgp.ac.in"
   if (location.state) login_id = location.state.login_id;
 
   const [publishedBlogs, setPublishedBlogs] = useState([
@@ -32,9 +32,11 @@ const Dashboard = () => {
           });
           result = await result.json();
 
+          console.log({login_id, res: result.blogs})
+
           let temp_blogs = []
 
-          if (result.status) {
+          if (result.blogs) {
             for(let i=0; i < result.blogs.blogs_and_comments.length; i++) {
               temp_blogs.push({
                 title: result.blogs.blogs_and_comments[i].title,

@@ -51,7 +51,6 @@ router.post("/signin", async (req, res) => {
 
   try {
     const record = await Credential.findOne({ login_id: req.body.login_id});
-    console.log(record);
 
     if (record) {
       res.json({status: await bcrypt.compare(req.body.password, record.password)})

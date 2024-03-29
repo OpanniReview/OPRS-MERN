@@ -22,8 +22,6 @@ const Login = () => {
     const data = new FormData(event.currentTarget);
     const email= data.get("email")
     const password= data.get("password")
-
-    console.log({email, password});
     
     try {
       let result = await fetch(

@@ -43,7 +43,9 @@ function UploadPage() {
 
       response = await response.json();
       if (response.status) {
-        navigate('/dashboard', {replace: true});
+        navigate('/dashboard', {replace: true, state: {
+          login_id: login_id
+        }});
       } else {
         alert('Error uploading file');
       }
