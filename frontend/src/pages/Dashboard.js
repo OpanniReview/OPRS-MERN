@@ -13,10 +13,7 @@ const Dashboard = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const login_id = user.login_id;
 
-  const [publishedBlogs, setPublishedBlogs] = useState([
-    { title: 'Published Blog 1', coAuthors: ['Author 1', 'Author 2'] },
-    { title: 'Published Blog 2', coAuthors: ['Author 1'] },
-  ]);
+  const [publishedBlogs, setPublishedBlogs] = useState([]);
 
   const [uploadedpage, setUploadedPage] = useState(false);
 
