@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -19,40 +19,41 @@ const Dashboard = () => {
     { title: 'Published Blog 2', coAuthors: ['Author 1'] },
   ]);
 
-  useEffect(() => {
-    const func = (async() => {
-      try {
-        let result = await fetch(
-          'http://localhost:4000/fetchallpapers', {
-            method: "post",
-            body: JSON.stringify({ login_id }),
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          });
-          result = await result.json();
+  const [uploadedpage, setUploadedPage] = useState(false);
 
-          console.log({login_id, res: result.blogs})
+  const func = (async() => {
+    try {
+      let result = await fetch(
+        'http://localhost:4000/fetchallpapers', {
+          method: "post",
+          body: JSON.stringify({ login_id }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        result = await result.json();
 
-          let temp_blogs = []
+        let temp_blogs = []
 
-          if (result.blogs) {
-            for(let i=0; i < result.blogs.blogs_and_comments.length; i++) {
-              temp_blogs.push({
-                title: result.blogs.blogs_and_comments[i].title,
-                coAuthors: result.blogs.blogs_and_comments[i].post.authors
-              })              
-            }
+        if (result.blogs) {
+          for(let i=0; i < result.blogs.blogs_and_comments.length; i++) {
+            temp_blogs.push({
+              title: result.blogs.blogs_and_comments[i].title,
+              coAuthors: result.blogs.blogs_and_comments[i].post.authors
+            })              
+          }
 
-            setPublishedBlogs([...publishedBlogs, ...temp_blogs])
-          }  
-      } catch(error) {
-        console.log(error);
-      }
-    })
+          setPublishedBlogs([...publishedBlogs, ...temp_blogs])
+        }  
+    } catch(error) {
+      console.log(error);
+    }
+  })
 
+  if (uploadedpage === false) {
     func();
-  }, [])
+    setUploadedPage(true);
+  }
 
   const draftBlogs = [
     { title: 'Draft Blog 1', lastEdited: '2022-05-15' },
