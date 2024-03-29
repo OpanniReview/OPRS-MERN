@@ -160,4 +160,15 @@ router.post('/upload', upload.single('file'), async(req, res) => {
   }
 }) 
 
+router.post('/fetchallpapers', async(req, res) => {
+  const login_id = req.body.login_id;
+
+  let result = await User.find({login_id});
+  if (result) {
+    res.json({
+      blogs: result[0],
+      status: true
+    })
+  }
+})
 module.exports = router;

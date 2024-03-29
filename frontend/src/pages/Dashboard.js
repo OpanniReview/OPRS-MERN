@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -14,12 +14,43 @@ const Dashboard = () => {
   let login_id = "rishabh8124@kgpain.iitkgp.ac.in"
   if (location.state) login_id = location.state.login_id;
 
-  // Dummy data for blogs (replace with your actual data)
-  const publishedBlogs = [
-    { title: 'Published Blog 1', dateWritten: '2022-03-25', coAuthors: ['Author 1', 'Author 2'] },
-    { title: 'Published Blog 2', dateWritten: '2022-04-01', coAuthors: ['Author 1'] },
-    // Add more published blogs as needed
-  ];
+  const [publishedBlogs, setPublishedBlogs] = useState([
+    { title: 'Published Blog 1', coAuthors: ['Author 1', 'Author 2'] },
+    { title: 'Published Blog 2', coAuthors: ['Author 1'] },
+  ]);
+
+  useEffect(() => {
+    const func = (async() => {
+      try {
+        let result = await fetch(
+          'http://localhost:4000/fetchallpapers', {
+            method: "post",
+            body: JSON.stringify({ login_id }),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          result = await result.json();
+
+          let temp_blogs = []
+
+          if (result.status) {
+            for(let i=0; i < result.blogs.blogs_and_comments.length; i++) {
+              temp_blogs.push({
+                title: result.blogs.blogs_and_comments[i].title,
+                coAuthors: result.blogs.blogs_and_comments[i].post.authors
+              })              
+            }
+
+            setPublishedBlogs([...publishedBlogs, ...temp_blogs])
+          }  
+      } catch(error) {
+        console.log(error);
+      }
+    })
+
+    func();
+  }, [])
 
   const draftBlogs = [
     { title: 'Draft Blog 1', lastEdited: '2022-05-15' },
@@ -64,9 +95,6 @@ const Dashboard = () => {
                   <Typography variant="h6" gutterBottom>
                     {blog.title}
                   </Typography>
-                  <Typography variant="subtitle2" gutterBottom>
-                    Date Written: {blog.dateWritten}
-                  </Typography>
                   <Typography variant="body2" gutterBottom>
                     Co-Authors: {blog.coAuthors.join(', ')}
                   </Typography>
@@ -74,7 +102,7 @@ const Dashboard = () => {
                 </Box>
               ))}
             </>
-          )}
+        )}
           {tabValue === 1 && (
             <>
               {draftBlogs.map((blog, index) => (
