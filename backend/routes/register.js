@@ -170,4 +170,27 @@ router.post('/fetchallpapers', async(req, res) => {
     })
   }
 })
+
+router.post('/viewpdf', async(req, res) => {
+
+  const login_id = req.body.login_id
+  const title = req.body.title
+
+  let result = await User.find({login_id});
+  if (result && result != []) result = result[0].blogs_and_comments;
+
+  if (result) {
+    for (let i=0; i<result.length; i++) {
+      if (result[i].title === title) {
+        res.json({
+          blogs: result[i].post.pdf.data,
+          status: true
+        })
+        break;
+      }
+    }
+  }
+
+})
+
 module.exports = router;
