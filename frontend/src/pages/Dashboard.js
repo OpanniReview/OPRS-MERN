@@ -5,21 +5,54 @@ import Typography from '@mui/material/Typography';
 import AppBar from '@mui/material/AppBar';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import { useAuthContext } from "../hooks/useAuthContext"
 
 import NotificationsPage from '../components/Notifications';
 
 const Dashboard = () => {
- 
-  const {user} = useAuthContext();
+  
+  const user = JSON.parse(localStorage.getItem('user'));
   const login_id = user.login_id;
 
-  // Dummy data for blogs (replace with your actual data)
-  const publishedBlogs = [
-    { title: 'Published Blog 1', dateWritten: '2022-03-25', coAuthors: ['Author 1', 'Author 2'] },
-    { title: 'Published Blog 2', dateWritten: '2022-04-01', coAuthors: ['Author 1'] },
-    // Add more published blogs as needed
-  ];
+  const [publishedBlogs, setPublishedBlogs] = useState([
+    { title: 'Published Blog 1', coAuthors: ['Author 1', 'Author 2'] },
+    { title: 'Published Blog 2', coAuthors: ['Author 1'] },
+  ]);
+
+  const [uploadedpage, setUploadedPage] = useState(false);
+
+  const func = (async() => {
+    try {
+      let result = await fetch(
+        'http://localhost:4000/fetchallpapers', {
+          method: "post",
+          body: JSON.stringify({ login_id }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        result = await result.json();
+
+        let temp_blogs = []
+
+        if (result.blogs) {
+          for(let i=0; i < result.blogs.blogs_and_comments.length; i++) {
+            temp_blogs.push({
+              title: result.blogs.blogs_and_comments[i].title,
+              coAuthors: result.blogs.blogs_and_comments[i].post.authors
+            })              
+          }
+
+          setPublishedBlogs([...publishedBlogs, ...temp_blogs])
+        }  
+    } catch(error) {
+      console.log(error);
+    }
+  })
+
+  if (uploadedpage === false) {
+    func();
+    setUploadedPage(true);
+  }
 
   const draftBlogs = [
     { title: 'Draft Blog 1', lastEdited: '2022-05-15' },

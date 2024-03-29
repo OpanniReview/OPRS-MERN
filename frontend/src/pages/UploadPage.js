@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Typography, TextField, Button, Container } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function UploadPage() {
 
   const navigate = useNavigate();
-  const location = useLocation();
-
+  
+  const user = JSON.parse(localStorage.getItem('user'));
   let login_id = "rishabh8124@kgpian.iitkgp.ac.in";
-  if (location.state) { login_id = location.state; }
+  if (user) { login_id = user.login_id }
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [abstract, setAbstract] = useState("");

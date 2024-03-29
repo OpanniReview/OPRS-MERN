@@ -11,11 +11,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import  { useNavigate } from 'react-router-dom';
 
-import { useAuthContext } from '../hooks/useAuthContext';
-
 const Register = () => {
-
-  const { dispatch, user } = useAuthContext();
 
   const navigate = useNavigate();
   
@@ -42,7 +38,6 @@ const Register = () => {
           console.log({email, first_name, last_name})
 
           localStorage.setItem('user', JSON.stringify({login_id: email}));
-          dispatch({type: 'LOGIN', payload: {login_id: email}});
           navigate('/register', {replace: true, state: {first_name, last_name}});
         } else {
           console.log("Signup Fail");

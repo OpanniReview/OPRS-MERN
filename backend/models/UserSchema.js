@@ -40,8 +40,7 @@ const UserSchema = new mongoose.Schema({
   blogs_and_comments: [{
       title : {
         type: String,
-        required: true,
-        unique: true
+        required: true
       },
       post: {
         pdf: {

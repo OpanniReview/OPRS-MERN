@@ -13,11 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom'
 
-import { useAuthContext } from '../hooks/useAuthContext';
-
 const Login = () => {
-
-  const { dispatch } = useAuthContext()
 
   let navigate = useNavigate();
 
@@ -41,7 +37,6 @@ const Login = () => {
         if (result.status) {
 
           localStorage.setItem('user', JSON.stringify({login_id: email}))
-          dispatch({type: 'LOGIN', payload: { login_id: email}})
 
           navigate('/dashboard', {required: true});
         } else {
