@@ -63,9 +63,6 @@ const Dashboard = () => {
                   <Typography variant="h6" gutterBottom>
                     {blog.title}
                   </Typography>
-                  <Typography variant="subtitle2" gutterBottom>
-                    Date Written: {blog.dateWritten}
-                  </Typography>
                   <Typography variant="body2" gutterBottom>
                     Co-Authors: {blog.coAuthors.join(', ')}
                   </Typography>
@@ -73,7 +70,7 @@ const Dashboard = () => {
                 </Box>
               ))}
             </>
-          )}
+        )}
           {tabValue === 1 && (
             <>
               {draftBlogs.map((blog, index) => (
