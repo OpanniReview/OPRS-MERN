@@ -17,7 +17,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 
 const Login = () => {
 
-  const { dispatch, user } = useAuthContext()
+  const { dispatch } = useAuthContext()
 
   let navigate = useNavigate();
 
@@ -26,8 +26,6 @@ const Login = () => {
     const data = new FormData(event.currentTarget);
     const email= data.get("email")
     const password= data.get("password")
-
-    console.log({email, password});
     
     try {
       let result = await fetch(
@@ -40,17 +38,12 @@ const Login = () => {
         });
         result = await result.json();
 
-        console.log(result)
-
         if (result.status) {
-          // saving login info to browser
-          localStorage.setItem('user', JSON.stringify(result))
 
-          // updating user
-          await dispatch({type: 'LOGIN', payload: email})
-          console.log(user, 'hi')
+          localStorage.setItem('user', JSON.stringify({login_id: email}))
+          dispatch({type: 'LOGIN', payload: { login_id: email}})
 
-          navigate('/dashboard', {required: true, state: {login_id: email}});
+          navigate('/dashboard', {required: true});
         } else {
           console.log("Signin Fail");
         }

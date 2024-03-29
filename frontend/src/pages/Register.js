@@ -14,7 +14,8 @@ import  { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
 
 const Register = () => {
-  const {dispatch} = useAuthContext()
+
+  const { dispatch, user } = useAuthContext();
 
   const navigate = useNavigate();
   
@@ -39,7 +40,10 @@ const Register = () => {
 
         if (result.status) {
           console.log({email, first_name, last_name})
-          navigate('/register', {replace: true, state: {email, first_name, last_name}});
+
+          localStorage.setItem('user', JSON.stringify({login_id: email}));
+          dispatch({type: 'LOGIN', payload: {login_id: email}});
+          navigate('/register', {replace: true, state: {first_name, last_name}});
         } else {
           console.log("Signup Fail");
         }

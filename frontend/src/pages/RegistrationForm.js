@@ -14,6 +14,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuthContext } from "../hooks/useAuthContext"
 
 const Registerationform = () => {
   const [professionalStatus, setProfessionalStatus] = useState('');
@@ -23,7 +24,9 @@ const Registerationform = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const login_id = location.state.email;
+  const {user} = useAuthContext();
+  const login_id = user.login_id;
+  
   const first_name = location.state.first_name;
   const last_name = location.state.last_name;
   const [name, setName] = useState(first_name + " " + last_name);
