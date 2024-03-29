@@ -38,13 +38,20 @@ const UserSchema = new mongoose.Schema({
     required: true
   },
   blogs_and_comments: [{
-      title: String,
-      pdf: {
-        name: String,
-        data: Buffer
+      title : {
+        type: String,
+        required: true,
+        unique: true
       },
-      description: String,
-      comments: [String],
+      post: {
+        pdf: {
+          name: String,
+          data: Buffer
+        },
+        authors: [String],
+        abstract: String,
+        comments: [[String]],
+      }
     }]
 }, { timestamps: true });
   

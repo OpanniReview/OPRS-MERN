@@ -39,7 +39,7 @@ const Registerationform = () => {
       let result = await fetch(
         'http://localhost:4000/register', {
           method: "post",
-          body: JSON.stringify({login_id, name, gender, dob, email, degree, personal_link, professionalStatus}),
+          body: JSON.stringify({login_id, first_name, last_name, gender, dob, email, degree, personal_link, professionalStatus}),
           headers: {
             'Content-Type': 'application/json'
           }
@@ -82,6 +82,7 @@ const Registerationform = () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
+                disabled
                 autoComplete="name"
                 name="name"
                 value = {name}

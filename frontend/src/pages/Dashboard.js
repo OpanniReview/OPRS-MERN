@@ -11,8 +11,8 @@ const Dashboard = () => {
 
   let location = useLocation();
 
-  const login_id = location.state.login_id;
-  // console.log(login_id);
+  let login_id = "rishabh8124@kgpain.iitkgp.ac.in"
+  if (location.state) login_id = location.state.login_id;
 
   // Dummy data for blogs (replace with your actual data)
   const publishedBlogs = [
