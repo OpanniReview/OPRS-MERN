@@ -11,7 +11,10 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import  { useNavigate } from 'react-router-dom';
 
+import { useAuthContext } from '../hooks/useAuthContext';
+
 const Register = () => {
+  const {dispatch} = useAuthContext()
 
   const navigate = useNavigate();
   
