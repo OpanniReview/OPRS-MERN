@@ -12,12 +12,15 @@ function UploadPage() {
   if (user) { login_id = user.login_id }
 
   const [selectedFile, setSelectedFile] = useState(null);
+  const [fileName, setFileName] = useState(null);
   const [abstract, setAbstract] = useState("");
   const [authors, setAuthors] = useState([]);
   const [title, setTitle] = useState("");
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
+    setFileName(event.target.value);
+    console.log(event.target.value)
   };
   
   const handleSubmit = async (event) => {
@@ -148,7 +151,7 @@ function UploadPage() {
           accept=".pdf,.docx"
           style={{ display: "none" }}
           id="upload-file"
-          multiple
+          // multiple
           type="file"
           onChange={handleFileChange}
         />
@@ -162,9 +165,9 @@ function UploadPage() {
             View File
           </Button>
         </label>
-        {/* <Typography variant="caption">
-          {selectedFile ? filePath.replace('C:\\fakepath\\', '') : ''}
-        </Typography> */}
+        <Typography variant="caption">
+          {fileName ? fileName.replace('C:\\fakepath\\', '') : ''}
+        </Typography>
       </Grid>
       <Button variant="submit" component="span" onClick={handleSubmit}>
         Submit
