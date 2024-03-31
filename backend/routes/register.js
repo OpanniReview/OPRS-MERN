@@ -176,6 +176,17 @@ router.post('/upload', upload.single('file'), async(req, res) => {
   }
 }) 
 
+router.get('/upload', async(req, res) => {
+  result = await User.distinct('login_id')
+  
+  if(result){
+    res.json({
+      users: result
+    })
+  }
+
+})
+
 router.post('/fetchallpapers', async(req, res) => {
   try{
     const login_id = req.body.login_id;

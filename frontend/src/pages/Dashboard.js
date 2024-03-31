@@ -40,7 +40,7 @@ const Dashboard = () => {
           }
 
           setPublishedBlogs([...publishedBlogs, ...temp_blogs])
-        }  
+        }
     } catch(error) {
       console.log(error);
     }

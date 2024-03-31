@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Typography, TextField, Button, Container } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Typography, TextField, Button, Container, Autocomplete} from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,6 +16,30 @@ function UploadPage() {
   const [abstract, setAbstract] = useState("");
   const [authors, setAuthors] = useState([]);
   const [title, setTitle] = useState("");
+
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    async function func() {
+    try{
+      let result = await fetch(
+        'http://localhost:4000/upload', {
+          method: "GET",
+          headers:{
+            'Content-Type': 'application/json'
+          }
+        });
+        result = await result.json()
+        console.log(result.users)
+
+        setUsers(result.users)
+
+    }catch(err){
+      console.log(err)
+    }}
+    func()
+  }, [])
+
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -101,7 +125,7 @@ function UploadPage() {
         margin="normal"
         onChange={(e) => setAbstract(e.target.value)}
       />
-      <TextField
+      {/* <TextField
         id="authors"
         label="Authors"
         helperText="Enter author names separated by commas"
@@ -112,6 +136,21 @@ function UploadPage() {
         onChange={(e) => {
           setAuthors(e.target.value)
         }}
+      /> */}
+      <Autocomplete
+        multiple
+        id="tags-outlined"
+        options={users}
+        getOptionLabel={(option) => option}
+        defaultValue={[users[0]]}
+        filterSelectedOptions
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="filterSelectedOptions"
+            placeholder="Favorites"
+          />
+        )}
       />
       <Grid
         container
