@@ -10,6 +10,39 @@ import Comment from "../components/Comment";
 function ReviewPage() {
   const [filePath, setFilePath] = useState("");
 
+  let publishedComments = ["B", "r", "u"];
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  let login_id = "rishabh8124@kgpian.iitkgp.ac.in";
+  if (user) { login_id = user.login_id }
+
+  const viewPDF = async () => {
+    try {
+      let response = await fetch('http://localhost:4000/viewpdf', {
+        method: 'POST',
+        body: JSON.stringify({login_id: "tharunselvam@kgpian.iitkgp.ac.in", title: 'Swami gay'}),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      response = await response.json();
+      if (response.status) {
+
+        const byteArray = new Uint8Array(response.blogs.data);
+        const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        
+      } else {
+        alert('Error uploading file');
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Error uploading file');
+    }
+  }
 
   // TO DO:
 
@@ -23,16 +56,16 @@ function ReviewPage() {
   // Comments / Reviews to be recorded, streamlined properly
   // Comment components should be such that it is like a thread to the main comment / review.
 
-  let link = "pdf?id=" + 1234;
-  let title = "In sample softmax for offline reinforcement learning";
-  let Authors = "Swaminathan S K, Bruh Hathkayosaurus";
-  let Abstract = "In this work, we considered the problem of learning action-values and corresponding policies from a fixed batch of data. The algorithms designed for this setting need to account for the fact that the action-coverage of the data distribution may be incomplete, that is certain state-action transitions are not present in the dataset. The core issue faced by Offline RL methods is insufficient action-coverage which leads to overestimation or divergence in learning during the bootstrapping update. We critically examine the In-Sample Softmax (INAC) algorithm for Offline Reinforcement Learning (RL), addressing the challenge of learning effective policies from pre-collected data without further environmental interaction using an in-sample softmax. Through extensive analysis and comparison with other in-sample algorithms like In-sample Actor-Critic (IAC)  and Batch-Constrained Q-learning (BCQ) , we investigate INAC's efficacy across various environments, including tabular, continuous, and discrete domains, as well as imbalanced datasets. We find that the INAC, when benchmarked against state-of-the-art offline RL algorithms, demonstrates robustness to variations in data distribution and performs comparably, if not superiorly, in all scenarios. We do a comprehensive evaluation of the capabilities and the limitations of the In-Sample Softmax method within the broader context of offline reinforcement learning.";
+  let title = "";
+  let Authors = []
+  let Abstract = ""
 
   let comment = "Summary Of Contributions: This study investigates the In-Sample Softmax (INAC) algorithm for Offline RL, focusing on learning from fixed datasets with incomplete action coverage. It compares INAC to similar algorithms across various environments, revealing its robust performance and competitive advantages. The analysis underscores INAC's potential in addressing offline RL challenges. \n Strengths And Weaknesses: \n Strength:This paper is clearly written and easy to follow.";
+  
   return (
     <Container maxWidth="md" style={{ padding: "20px" }}>
       <Typography variant="h4" gutterBottom style={{ textAlign: "left"}}>
-        {title} <IconButton href={link}><ArticleIcon variant="contained">Access PDF</ArticleIcon></IconButton>
+        {title} <IconButton onClick={viewPDF}><ArticleIcon variant="contained">Access PDF</ArticleIcon></IconButton>
 
         <Typography variant="body2" gutterBottom>
         {Authors}
@@ -48,9 +81,13 @@ function ReviewPage() {
 
       <Typography variant="subtitle1" gutterBottom style={{ fontWeight: "bold" }}>
         Reviews:
-      <Comment disable="True" comment={comment}/>
-      <Comment disable="True" comment={comment} user="10ewY"/>
-      <Comment/>
+
+      {publishedComments.map((comment, index) => (
+        <Box key={index} sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, mb: 2 }}>
+          <Comment disable="True" comment={comment}/>
+        </Box>
+      ))}
+      
       </Typography>
     </Container>
   );
