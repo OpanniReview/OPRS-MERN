@@ -20,7 +20,6 @@ function UploadPage() {
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
     setFileName(event.target.value);
-    console.log(event.target.value)
   };
   
   const handleSubmit = async (event) => {
@@ -34,7 +33,7 @@ function UploadPage() {
     const formData = new FormData();
     formData.append('file', selectedFile);
     formData.append('abstract', abstract);
-    formData.append('authors', authors);
+    formData.append('authors', [authors]);
     formData.append('login_id', login_id);
     formData.append('title', title)
 
@@ -47,33 +46,6 @@ function UploadPage() {
       response = await response.json();
       if (response.status) {
         navigate('/dashboard', {replace: true});
-      } else {
-        alert('Error uploading file');
-      }
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      alert('Error uploading file');
-    }
-  };
-
-  const viewPDF = async () => {
-    try {
-      let response = await fetch('http://localhost:4000/viewpdf', {
-        method: 'POST',
-        body: JSON.stringify({login_id: 'rishabh8124@kgpian.iitkgp.ac.in', title: 'b'}),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      response = await response.json();
-      if (response.status) {
-
-        const byteArray = new Uint8Array(response.blogs.data);
-        const blob = new Blob([byteArray], { type: 'application/pdf' });
-
-        const url = URL.createObjectURL(blob);
-        window.open(url, '_blank');
         
       } else {
         alert('Error uploading file');
@@ -82,7 +54,7 @@ function UploadPage() {
       console.error('Error uploading file:', error);
       alert('Error uploading file');
     }
-  }
+  };
 
   return (
     <Container maxWidth="md" style={{ padding: "20px" }}>
@@ -135,10 +107,10 @@ function UploadPage() {
         helperText="Enter author names separated by commas"
         variant="outlined"
         fullWidth
-        value = {authors.join(", ")}
+        value = {authors}
         margin="normal"
         onChange={(e) => {
-          setAuthors(e.target.value.split(', '))
+          setAuthors(e.target.value)
         }}
       />
       <Grid
@@ -158,11 +130,6 @@ function UploadPage() {
         <label htmlFor="upload-file">
           <Button variant="contained" component="span">
             Upload File
-          </Button>
-        </label>
-        <label htmlFor="view-file">
-          <Button variant="contained" component="span" onClick={viewPDF}>
-            View File
           </Button>
         </label>
         <Typography variant="caption">

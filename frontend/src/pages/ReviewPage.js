@@ -13,7 +13,7 @@ function ReviewPage() {
   const [Authors, setAuthors] = useState([])
   const [Abstract, setAbstract] = useState("")
   const [url, seturl] = useState(null);
-  const title = "Swami gay"
+  const [title, setTitle] = useState("");
 
   const user = JSON.parse(localStorage.getItem('user'));
   let login_id = "rishabh8124@kgpian.iitkgp.ac.in";
@@ -41,7 +41,7 @@ function ReviewPage() {
     try {
       let response = await fetch('http://localhost:4000/getpaperdetails', {
         method: 'POST',
-        body: JSON.stringify({login_id: "rishabh8124@kgpian.iitkgp.ac.in", title: 'a'}),
+        body: JSON.stringify({paper_id: "6609a961a92bba8462b9bea0"}),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -49,14 +49,16 @@ function ReviewPage() {
 
       response = await response.json();
       if (response.status) {
+        response = response.paper_details[0]
 
-        const byteArray = new Uint8Array(response.blogs.post.pdf.data.data);
+        const byteArray = new Uint8Array(response.pdfdata.data);
         const blob = new Blob([byteArray], { type: 'application/pdf' });
 
         seturl(URL.createObjectURL(blob));
-        setAbstract(response.blogs.post.abstract);
-        setCommentsList([...publishedComments, ...response.blogs.post.comments]);
-        setAuthors(response.blogs.post.authors)
+        setAbstract(response.abstract);
+        setCommentsList([...publishedComments, ...response.comments]);
+        setAuthors(response.authors)
+        setTitle(response.title)
         
       } else {
         alert('Error uploading file');

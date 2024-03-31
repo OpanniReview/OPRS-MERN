@@ -37,22 +37,8 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  blogs_and_comments: [{
-      title : {
-        type: String,
-        required: true
-      },
-      post: {
-        pdf: {
-          name: String,
-          data: Buffer
-        },
-        reviewers: [String],
-        authors: [String],
-        abstract: String,
-        comments: [[[String, String]]],
-      }
-    }]
+  published_papers: [String],
+  review_papers: [String]
 }, { timestamps: true });
   
 module.exports = mongoose.model('Blogs', UserSchema)

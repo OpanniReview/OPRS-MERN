@@ -1,6 +1,7 @@
 const express = require("express");
 const Credential = require("../models/credentialSchema");
 const User = require("../models/UserSchema");
+const Paper = require("../models/paperSchema")
 const bcrypt = require('bcrypt')
 const validator = require('validator')
 const multer = require('multer')
@@ -57,7 +58,7 @@ router.post("/signin", async (req, res) => {
     }
     else res.json({status: false})
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     res.json({ status: false });
   }
 });
@@ -111,7 +112,7 @@ router.post('/upload', upload.single('file'), async(req, res) => {
 
   const file = req.file;
   const abstract = req.body.abstract;
-  const authors = req.body.authors;
+  let authors = req.body.authors;
   const login_id = req.body.login_id;
   const title = req.body.title;
 
@@ -128,30 +129,46 @@ router.post('/upload', upload.single('file'), async(req, res) => {
       throw Error("Provide a description of the paper");
     }
 
-    const result = await User.findOne( { login_id: login_id } );
+    if (!title) {
+      throw Error("Provide a title")
+    }
 
-    for (let i=0; i<(result.blogs_and_comments.length); i++) {
-      if (result.blogs_and_comments[i].title === title) {
-        throw Error("Title already exists");
+    const publish_paper = await Paper.create({
+      title: title,
+      pdfname: file.originalname,
+      pdfdata: file.buffer,
+      isPublished: false,
+      authors: authors,
+      abstract: abstract
+    })
+    authors = [authors];
+
+    if (!publish_paper) {
+      throw Error("Paper not published");
+    }
+
+    const paper_id = publish_paper._id;
+
+    let user_details = "";
+    let update_result = "";
+
+    for (let i=0; i<authors.length; i++) {
+      user_details = await User.findOne({login_id: login_id})
+
+      if (!user_details) {
+        throw Error("User not found")
+      }
+
+      user_details.published_papers.push(paper_id);
+      
+      update_result = await User.findOneAndReplace({login_id: authors[i]}, user_details);
+
+      if (!update_result) {
+        throw Error("Couldn't publish paper to the author")
       }
     }
 
-    result.blogs_and_comments.push(
-      {
-        title: title,
-        post: {
-          pdf: {
-            name: file.originalname,
-            data: file.buffer
-            },
-          authors: authors,
-          abstract: abstract
-        }
-      })
-
-    const update_result = await User.findOneAndReplace({ login_id: login_id }, result);
-
-    res.json({status: !(!(update_result))});
+    res.json({ status: true })
 
   } catch (error) {
       console.log(error.message);
@@ -160,35 +177,50 @@ router.post('/upload', upload.single('file'), async(req, res) => {
 }) 
 
 router.post('/fetchallpapers', async(req, res) => {
-  const login_id = req.body.login_id;
+  try{
+    const login_id = req.body.login_id;
 
-  let result = await User.find({login_id});
-  if (result) {
+    let result = await User.find({login_id});
+    if (!result) {
+      throw Error("User not found");
+    }
+    result = result[0].published_papers;
+
+    let papers = [];
+
+    let paper_result = "";
+
+    for (let i=0; i<result.length; i++) {
+      paper_result = await Paper.findById(result[i]);
+      papers.push(paper_result);
+    }
+
     res.json({
-      blogs: result[0],
-      status: true
+      blogs: papers, status: true
     })
+  } catch(error) {
+    console.log(error.message);
+    res.json({status: false});
   }
+
 })
 
 router.post('/getpaperdetails', async(req, res) => {
 
-  const login_id = req.body.login_id
-  const title = req.body.title
-
-  let result = await User.find({login_id});
-  if (result && result != []) result = result[0].blogs_and_comments;
-
-  if (result) {
-    for (let i=0; i<result.length; i++) {
-      if (result[i].title === title) {
-        res.json({
-          blogs: result[i],
-          status: true
-        })
-        break;
-      }
+  try {
+    const paper_id = req.body.paper_id
+    let result = await Paper.find({_id: paper_id});
+    if (result) {
+      res.json({
+        paper_details: result,
+        status: true
+      })
+    } else {
+      throw Error("Paper not found")
     }
+  } catch(error) {
+    console.log(error.message);
+    res.json({status: false})
   }
 
 })

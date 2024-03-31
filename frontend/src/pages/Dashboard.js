@@ -32,11 +32,11 @@ const Dashboard = () => {
         let temp_blogs = []
 
         if (result.blogs) {
-          for(let i=0; i < result.blogs.blogs_and_comments.length; i++) {
+          for(let i=0; i < result.blogs.length; i++) {
             temp_blogs.push({
-              title: result.blogs.blogs_and_comments[i].title,
-              coAuthors: result.blogs.blogs_and_comments[i].post.authors
-            })              
+              title: result.blogs[i].title,
+              coAuthors: result.blogs[i].authors
+            })
           }
 
           setPublishedBlogs([...publishedBlogs, ...temp_blogs])
