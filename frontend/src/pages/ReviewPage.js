@@ -1,15 +1,20 @@
 import React, { useEffect, useState, useParams } from "react";
+import { useSearchParams } from "react-router-dom";
+
 import { Typography, TextField, Button, Container } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import ArticleIcon from '@mui/icons-material/Article';
-// import Link from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import Comment from "../components/Comment";
 
+
 function ReviewPage() {
 
-  const { paperId } = useParams();
+  const [searchParams, setsearchParams] = useSearchParams()
+  // const paperId = searchParams.get("paperId")
+  const paperId = useSearchParams()
+  console.log(paperId)
 
   const [publishedComments, setCommentsList] = useState(["B", "r", "u"]);
   const [Authors, setAuthors] = useState([])

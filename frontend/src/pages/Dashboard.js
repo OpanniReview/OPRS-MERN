@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import AppBar from '@mui/material/AppBar';
 import Tab from '@mui/material/Tab';
@@ -30,12 +31,14 @@ const Dashboard = () => {
         result = await result.json();
 
         let temp_blogs = []
+        let temp_ids = []
 
         if (result.blogs) {
           for(let i=0; i < result.blogs.length; i++) {
             temp_blogs.push({
               title: result.blogs[i].title,
-              coAuthors: result.blogs[i].authors
+              coAuthors: result.blogs[i].authors,
+              id: result.blogs[i]._id
             })
           }
 
@@ -90,15 +93,17 @@ const Dashboard = () => {
           {tabValue === 0 && (
             <>
               {publishedBlogs.map((blog, index) => (
-                <Box key={index} sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, mb: 2 }}>
-                  <Typography variant="h6" gutterBottom>
-                    {blog.title}
-                  </Typography>
-                  <Typography variant="body2" gutterBottom>
-                    Co-Authors: {blog.coAuthors.join(', ')}
-                  </Typography>
-                  {/* Add more details about the published blog if needed */}
-                </Box>
+                <Link key={index} href={`/review/paperId=${blog.id}`} >
+                  <Box key={index} sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, mb: 2 }}>
+                    <Typography variant="h6" gutterBottom>
+                      {blog.title}
+                    </Typography>
+                    <Typography variant="body2" gutterBottom>
+                      Co-Authors: {blog.coAuthors.join(', ')}
+                    </Typography>
+                    {/* Add more details about the published blog if needed */}
+                  </Box>
+                </Link>
               ))}
             </>
         )}

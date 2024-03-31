@@ -222,6 +222,7 @@ router.post('/getpaperdetails', async(req, res) => {
 
   try {
     const paper_id = req.body.paper_id
+    console.log(paper_id)
     let result = await Paper.find({_id: paper_id});
     if (result) {
       res.json({
