@@ -38,7 +38,7 @@ function App() {
               element = {<UploadPage />}
             />
             <Route 
-              path = "/review"
+              path = "/review/:paperId"
               element = {<ReviewPage />}
             />
           </Routes>

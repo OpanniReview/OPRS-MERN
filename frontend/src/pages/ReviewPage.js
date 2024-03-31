@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useParams } from "react";
 import { Typography, TextField, Button, Container } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import ArticleIcon from '@mui/icons-material/Article';
@@ -8,6 +8,8 @@ import Box from '@mui/material/Box';
 import Comment from "../components/Comment";
 
 function ReviewPage() {
+
+  const { paperId } = useParams();
 
   const [publishedComments, setCommentsList] = useState(["B", "r", "u"]);
   const [Authors, setAuthors] = useState([])
@@ -41,7 +43,7 @@ function ReviewPage() {
     try {
       let response = await fetch('http://localhost:4000/getpaperdetails', {
         method: 'POST',
-        body: JSON.stringify({paper_id: "6609a961a92bba8462b9bea0"}),
+        body: JSON.stringify({paper_id: paperId}),
         headers: {
           'Content-Type': 'application/json'
         }

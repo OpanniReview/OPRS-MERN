@@ -40,6 +40,7 @@ const Dashboard = () => {
           }
 
           setPublishedBlogs([...publishedBlogs, ...temp_blogs])
+          console.log(publishedBlogs)
         }
     } catch(error) {
       console.log(error);
