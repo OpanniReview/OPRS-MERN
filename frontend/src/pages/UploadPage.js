@@ -30,7 +30,6 @@ function UploadPage() {
           }
         });
         result = await result.json()
-        console.log(result.users)
 
         setUsers(result.users)
 
@@ -47,6 +46,8 @@ function UploadPage() {
   };
   
   const handleSubmit = async (event) => {
+    console.log(authors);
+
     if (!selectedFile) {
       alert('Please select a file');
       return;
@@ -57,7 +58,7 @@ function UploadPage() {
     const formData = new FormData();
     formData.append('file', selectedFile);
     formData.append('abstract', abstract);
-    formData.append('authors', [authors]);
+    formData.append('authors', authors);
     formData.append('login_id', login_id);
     formData.append('title', title)
 
@@ -142,8 +143,9 @@ function UploadPage() {
         id="tags-outlined"
         options={users}
         getOptionLabel={(option) => option}
-        defaultValue={[users[0]]}
+        defaultValue={[]}
         filterSelectedOptions
+        onChange={(event, value) => {setAuthors(value)}}
         renderInput={(params) => (
           <TextField
             {...params}

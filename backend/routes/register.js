@@ -133,6 +133,8 @@ router.post('/upload', upload.single('file'), async(req, res) => {
       throw Error("Provide a title")
     }
 
+    authors = authors.split(',');
+    
     const publish_paper = await Paper.create({
       title: title,
       pdfname: file.originalname,
@@ -141,7 +143,6 @@ router.post('/upload', upload.single('file'), async(req, res) => {
       authors: authors,
       abstract: abstract
     })
-    authors = [authors];
 
     if (!publish_paper) {
       throw Error("Paper not published");
@@ -153,7 +154,7 @@ router.post('/upload', upload.single('file'), async(req, res) => {
     let update_result = "";
 
     for (let i=0; i<authors.length; i++) {
-      user_details = await User.findOne({login_id: login_id})
+      user_details = await User.findOne({login_id: authors[i]})
 
       if (!user_details) {
         throw Error("User not found")
@@ -164,6 +165,7 @@ router.post('/upload', upload.single('file'), async(req, res) => {
       update_result = await User.findOneAndReplace({login_id: authors[i]}, user_details);
 
       if (!update_result) {
+        console.log(authors[i])
         throw Error("Couldn't publish paper to the author")
       }
     }
