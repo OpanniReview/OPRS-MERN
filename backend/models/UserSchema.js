@@ -47,9 +47,10 @@ const UserSchema = new mongoose.Schema({
           name: String,
           data: Buffer
         },
+        reviewers: [String],
         authors: [String],
         abstract: String,
-        comments: [[String]],
+        comments: [[[String, String]]],
       }
     }]
 }, { timestamps: true });
