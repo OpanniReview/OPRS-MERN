@@ -22,8 +22,6 @@ const Login = () => {
     const data = new FormData(event.currentTarget);
     const email= data.get("email")
     const password= data.get("password")
-
-    console.log({email, password});
     
     try {
       let result = await fetch(
@@ -37,7 +35,10 @@ const Login = () => {
         result = await result.json();
 
         if (result.status) {
-          navigate('/dashboard', {required: true, state: {login_id: email}});
+
+          localStorage.setItem('user', JSON.stringify({login_id: email}))
+
+          navigate('/dashboard', {required: true});
         } else {
           console.log("Signin Fail");
         }

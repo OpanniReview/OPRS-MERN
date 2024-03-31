@@ -3,8 +3,12 @@ const Credential = require("../models/credentialSchema");
 const User = require("../models/UserSchema");
 const bcrypt = require('bcrypt')
 const validator = require('validator')
+const multer = require('multer')
 
 const router = express.Router();
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 // Functions to access database - queries
 router.post("/signup", async (req, res) => {
@@ -47,7 +51,6 @@ router.post("/signin", async (req, res) => {
 
   try {
     const record = await Credential.findOne({ login_id: req.body.login_id});
-    console.log(record);
 
     if (record) {
       res.json({status: await bcrypt.compare(req.body.password, record.password)})
@@ -61,8 +64,8 @@ router.post("/signin", async (req, res) => {
 
 router.post("/register", async (req, res) => {
   const login_id = req.body.login_id;
-  const first_name = req.body.name;
-  const last_name = req.body.name;
+  const first_name = req.body.first_name;
+  const last_name = req.body.last_name;
   const dob = req.body.dob;
   const gender = req.body.gender;
   const email = req.body.email;
@@ -100,6 +103,92 @@ router.post("/register", async (req, res) => {
   } catch (error) {
     console.log(error.message)
     res.json({ status: false });
+  }
+
+})
+
+router.post('/upload', upload.single('file'), async(req, res) => {
+
+  const file = req.file;
+  const abstract = req.body.abstract;
+  const authors = req.body.authors;
+  const login_id = req.body.login_id;
+  const title = req.body.title;
+
+  try {
+    if (!file) {
+      throw Error("Upload a file");
+    }
+
+    if (!authors) {
+      throw Error("Authors field cannot be empty");
+    }
+
+    if (!abstract) {
+      throw Error("Provide a description of the paper");
+    }
+
+    const result = await User.findOne( { login_id: login_id } );
+
+    for (let i=0; i<(result.blogs_and_comments.length); i++) {
+      if (result.blogs_and_comments[i].title === title) {
+        throw Error("Title already exists");
+      }
+    }
+
+    result.blogs_and_comments.push(
+      {
+        title: title,
+        post: {
+          pdf: {
+            name: file.originalname,
+            data: file.buffer
+            },
+          authors: authors,
+          abstract: abstract
+        }
+      })
+
+    const update_result = await User.findOneAndReplace({ login_id: login_id }, result);
+
+    res.json({status: !(!(update_result))});
+
+  } catch (error) {
+      console.log(error.message);
+      res.json({status: false})
+  }
+}) 
+
+router.post('/fetchallpapers', async(req, res) => {
+  const login_id = req.body.login_id;
+
+  let result = await User.find({login_id});
+  if (result) {
+    res.json({
+      blogs: result[0],
+      status: true
+    })
+  }
+})
+
+router.post('/viewpdf', async(req, res) => {
+
+  const login_id = req.body.login_id
+  const title = req.body.title
+
+  let result = await User.find({login_id});
+  if (result && result != []) result = result[0].blogs_and_comments;
+
+  if (result) {
+    for (let i=0; i<result.length; i++) {
+      if (result[i].title === title) {
+        res.json({
+          blogs: result[i].post.pdf.data,
+          status: true
+        })
+        break;
+      }
+    }
   }
 
 })

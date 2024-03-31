@@ -5,21 +5,51 @@ import Typography from '@mui/material/Typography';
 import AppBar from '@mui/material/AppBar';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import { useLocation } from 'react-router-dom';
+
+import NotificationsPage from '../components/Notifications';
 
 const Dashboard = () => {
+  
+  const user = JSON.parse(localStorage.getItem('user'));
+  const login_id = user.login_id;
 
-  let location = useLocation();
+  const [publishedBlogs, setPublishedBlogs] = useState([]);
 
-  const login_id = location.state.login_id;
-  // console.log(login_id);
+  const [uploadedpage, setUploadedPage] = useState(false);
 
-  // Dummy data for blogs (replace with your actual data)
-  const publishedBlogs = [
-    { title: 'Published Blog 1', dateWritten: '2022-03-25', coAuthors: ['Author 1', 'Author 2'] },
-    { title: 'Published Blog 2', dateWritten: '2022-04-01', coAuthors: ['Author 1'] },
-    // Add more published blogs as needed
-  ];
+  const func = (async() => {
+    try {
+      let result = await fetch(
+        'http://localhost:4000/fetchallpapers', {
+          method: "post",
+          body: JSON.stringify({ login_id }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        result = await result.json();
+
+        let temp_blogs = []
+
+        if (result.blogs) {
+          for(let i=0; i < result.blogs.blogs_and_comments.length; i++) {
+            temp_blogs.push({
+              title: result.blogs.blogs_and_comments[i].title,
+              coAuthors: result.blogs.blogs_and_comments[i].post.authors
+            })              
+          }
+
+          setPublishedBlogs([...publishedBlogs, ...temp_blogs])
+        }  
+    } catch(error) {
+      console.log(error);
+    }
+  })
+
+  if (uploadedpage === false) {
+    func();
+    setUploadedPage(true);
+  }
 
   const draftBlogs = [
     { title: 'Draft Blog 1', lastEdited: '2022-05-15' },
@@ -38,8 +68,7 @@ const Dashboard = () => {
       <Grid container spacing={2}>
         {/* Left column */}
         <Grid item xs={12} md={4}>
-          {/* Left column content goes here */}
-          {/* Currently empty */}
+          <NotificationsPage />
         </Grid>
         {/* Right column */}
         <Grid item xs={12} md={8}>
@@ -64,9 +93,6 @@ const Dashboard = () => {
                   <Typography variant="h6" gutterBottom>
                     {blog.title}
                   </Typography>
-                  <Typography variant="subtitle2" gutterBottom>
-                    Date Written: {blog.dateWritten}
-                  </Typography>
                   <Typography variant="body2" gutterBottom>
                     Co-Authors: {blog.coAuthors.join(', ')}
                   </Typography>
@@ -74,7 +100,7 @@ const Dashboard = () => {
                 </Box>
               ))}
             </>
-          )}
+        )}
           {tabValue === 1 && (
             <>
               {draftBlogs.map((blog, index) => (

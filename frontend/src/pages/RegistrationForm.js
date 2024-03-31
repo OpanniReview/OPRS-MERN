@@ -23,7 +23,9 @@ const Registerationform = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const login_id = location.state.email;
+  const user = JSON.parse(localStorage.getItem('user'));
+  const login_id = user.login_id;
+  
   const first_name = location.state.first_name;
   const last_name = location.state.last_name;
   const [name, setName] = useState(first_name + " " + last_name);
@@ -39,7 +41,7 @@ const Registerationform = () => {
       let result = await fetch(
         'http://localhost:4000/register', {
           method: "post",
-          body: JSON.stringify({login_id, name, gender, dob, email, degree, personal_link, professionalStatus}),
+          body: JSON.stringify({login_id, first_name, last_name, gender, dob, email, degree, personal_link, professionalStatus}),
           headers: {
             'Content-Type': 'application/json'
           }
@@ -82,6 +84,7 @@ const Registerationform = () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
+                disabled
                 autoComplete="name"
                 name="name"
                 value = {name}
