@@ -10,7 +10,8 @@ import Comment from "../components/Comment";
 function ReviewPage() {
 
   const {paperId} = useParams();
-  const [publishedComments, setCommentsList] = useState(["", "", ""]);
+  const [publishedComments, setCommentsList] = useState([]);
+  const [tempComments, setTempComments] = useState([]);
   const [Reviewers, setReviewers] = useState([]);
 
   const [Authors, setAuthors] = useState([])
@@ -44,8 +45,28 @@ function ReviewPage() {
 
   let comment = "Summary Of Contributions: This study investigates the In-Sample Softmax (INAC) algorithm for Offline RL, focusing on learning from fixed datasets with incomplete action coverage. It compares INAC to similar algorithms across various environments, revealing its robust performance and competitive advantages. The analysis underscores INAC's potential in addressing offline RL challenges. \n Strengths And Weaknesses: \n Strength:This paper is clearly written and easy to follow.";
   
-  const addReview = async () => {
-    console.log("Bruh");
+  const addReview = async (event, index) => {
+    setCommentsList([...tempComments])
+    try {
+      let response = await fetch('http://localhost:4000/addcomment', {
+        method: 'POST',
+        body: JSON.stringify({paper_id: paperId, comment: tempComments}),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response) {
+        response = response.json();
+        console.log(response);
+      }
+    } catch(error) {
+      console.log(error.message);
+    }
+  }
+
+  const onChangefield = (event, index) => {
+    setTempComments(values => values.map((value, i) => i === index ? event.target.value: value));
   }
 
   const start_func = async() => {
@@ -68,6 +89,7 @@ function ReviewPage() {
         seturl(URL.createObjectURL(blob));
         setAbstract(response.abstract);
         setCommentsList([...publishedComments, ...response.comments]);
+        setTempComments([...publishedComments]);
         setAuthors(response.authors)
         setTitle(response.title)
         setReviewers([...Reviewers, ...response.reviewers])
@@ -109,8 +131,16 @@ function ReviewPage() {
 
       {publishedComments.map((comment, index) => (
         <Box key={index} sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, mb: 2 }}>
-          <Comment disable="True" comment={comment} login_id={login_id} check_login_id={Reviewers[index]}/>
-          {(Reviewers[index] === login_id) && <Button onClick={addReview}>Add Review</Button>}
+          <TextField
+            disabled={Reviewers[index] != login_id}
+            multiline
+            rows={4}
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={publishedComments[index]}
+            onChange={(event) => {onChangefield(event, index)}}>Bruh</TextField>
+          {(Reviewers[index] === login_id) && <Button onClick={(event) => addReview(event, index)}>Add Review</Button>}
         </Box>
       ))}
       

@@ -6,9 +6,13 @@ import ArticleIcon from '@mui/icons-material/Article';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 
-function Comment({disable = "False", user="xyz", comment="", login_id="None", check_login_id="No"}) {
+function Comment({disable = "False", user="xyz", comment="", login_id="None", check_login_id="No", funcvalue=null, index=0, datavalue=[]}) {
     
-    
+    const updatelist = (event) => {
+        const value = [...datavalue];
+        value[index] = event.target.value;
+        funcvalue(value);
+    }    
 
     if(login_id != check_login_id){
         let reviewUser = "Posted by reviewer " + user;
@@ -22,7 +26,8 @@ function Comment({disable = "False", user="xyz", comment="", login_id="None", ch
             fullWidth
             margin="normal"
             value={comment}
-            label={reviewUser}>Bruh</TextField>
+            label={reviewUser}
+            onChange={(event) => updatelist(event)}>Bruh</TextField>
         );
     }
     else{

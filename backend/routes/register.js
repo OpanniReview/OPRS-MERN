@@ -207,6 +207,8 @@ router.post('/fetchallpapers', async(req, res) => {
       papers.push(paper_result);
     }
 
+    console.log(papers.length);
+
     res.json({
       blogs: papers, status: true
     })
@@ -235,6 +237,32 @@ router.post('/getpaperdetails', async(req, res) => {
     res.json({status: false})
   }
 
+})
+
+router.post('/addcomment', async(req, res) => {
+
+  try{
+    const paper_id = req.body.paper_id
+    let result = await Paper.find({_id: paper_id});
+    if (result) {
+      result = result[0];
+      result.comments = req.body.comment;
+      console.log(result);
+      let update_result = await Paper.findOneAndReplace({_id: paper_id}, result);
+      if (update_result) {
+        res.json({
+          status: true
+        })
+      } else {
+        res.json({
+          status: false
+        })
+      }
+    }
+  } catch(error) {
+    console.log(error.message);
+    res.json({status:false});
+  }
 })
 
 module.exports = router;
