@@ -21,7 +21,7 @@ const Admin = () => {
   const func = (async() => {
     try {
       let result = await fetch(
-        'http://localhost:4000/fetchallpapers', {
+        'http://localhost:4000/fetchallpapersAdmin', {
           method: "post",
           body: JSON.stringify({ login_id }),
           headers: {
@@ -83,8 +83,8 @@ const Admin = () => {
               textColor="primary"
               variant="fullWidth"
             >
-              <Tab label="Published Blogs" />
-              <Tab label="Draft Blogs" />
+              <Tab label="Papers Submitted" />
+              <Tab label="Papers Sent for Review" />
             </Tabs>
           </AppBar>
           {/* Display the selected blogs */}
@@ -124,6 +124,8 @@ const Admin = () => {
       </Grid>
     </Box>
   );
+
+  
 };
 
 export default Admin;

@@ -5,12 +5,16 @@ import ArticleIcon from '@mui/icons-material/Article';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import Comment from "../components/Comment";
+import { useNavigate } from 'react-router-dom';
 
 
 function ReviewPage() {
+
+  const navigate = useNavigate();
   
-  const [isAdmin, SetIsAdmin] = useState(false);
-  const [reviewers, setReviewers] = useState([]);
+  const [isAdmin, SetIsAdmin] = useState(true);
+  const [reviewersAvail, setReviewersAvail] = useState([]);
+  const [reviewersSelected, setReviewersSelected] = useState([]);
 
   const {paperId} = useParams();
   const [publishedComments, setCommentsList] = useState(["B", "r", "u"]);
@@ -44,7 +48,7 @@ function ReviewPage() {
         });
         result = await result.json()
 
-        setReviewers(result.users)
+        setReviewersAvail(result.users)
 
     }catch(err){
       console.log(err)
@@ -100,11 +104,41 @@ function ReviewPage() {
   useEffect(() => {
     start_func();
     getReviewers();
-    console.log(reviewers);
   }, []) 
 
   // handle admin review submit
-  const handleReviewSubmit = () => {
+  const handleReviewSubmit = async (event) => {
+    
+      event.preventDefault();
+  
+      const reviewers = {
+        reviewers : reviewersSelected,
+        paper_id : paperId
+      }
+  
+      console.log(paperId)
+
+      try {
+        let response = await fetch('http://localhost:4000/adminUpload', {
+          method: 'POST',
+          body: JSON.stringify(reviewers),
+          headers:{
+            'Content-Type': 'application/json'
+          }
+        });
+  
+        response = await response.json();
+        if (response.status) {
+          navigate('/admin', {replace: true});
+          
+        } else {
+          alert('Error assigning reviewers');
+        }
+      } catch (error) {
+        console.error('Error assigining reviewers:', error);
+        alert('Error assigning reviewers');
+      }
+
 
   }
 
@@ -142,11 +176,11 @@ function ReviewPage() {
             <Autocomplete
             multiple
             id="tags-outlined"
-            options={reviewers}
+            options={reviewersAvail}
             getOptionLabel={(option) => option}
             defaultValue={[]}
             filterSelectedOptions
-            onChange={(event, value) => {setAuthors(value)}}
+            onChange={(event, value) => {setReviewersSelected(value)}}
             renderInput={(params) => (
               <TextField
                 {...params}

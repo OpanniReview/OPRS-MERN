@@ -145,7 +145,7 @@ function UploadPage() {
         getOptionLabel={(option) => option}
         defaultValue={[]}
         filterSelectedOptions
-        onChange={(event, value) => {setAuthors(value)}}
+        onChange={(event, value) => {setAuthors(value); console.log(authors)}}
         renderInput={(params) => (
           <TextField
             {...params}

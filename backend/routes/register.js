@@ -225,6 +225,43 @@ router.post('/fetchallpapers', async(req, res) => {
 
 })
 
+router.post('/fetchallpapersAdmin', async(req, res) => {
+  try{
+
+    let resultNew = await Paper.find({isPublished: 'false'});
+    if (!resultNew) {
+      throw Error("Papers empty");
+    }
+    // result = resultNew[0].published_papers;
+    // result1 = resultNew[0].review_papers;
+
+    // let papers = [];
+    // let review = [];
+
+    // let paper_result = "";
+    // let review_result = "";
+
+    // for (let i=0; i<result.length; i++) {
+    //   paper_result = await Paper.findById(result[i]);
+    //   papers.push(paper_result);
+    // }
+
+    // for (let i=0; i<result1.length; i++) {
+    //   review_result = await Paper.findById(result1[i]);
+    //   review.push(review_result);
+    // }
+
+    res.json({
+      blogs: resultNew, status: true
+    })
+    console.log(resultNew)
+  } catch(error) {
+    console.log(error.message);
+    res.json({status: false});
+  }
+
+})
+
 router.post('/getpaperdetails', async(req, res) => {
 
   try {
@@ -245,4 +282,55 @@ router.post('/getpaperdetails', async(req, res) => {
 
 })
 
+router.post('/adminUpload', async(req, res) => {
+  try{
+    const reviewers = req.body.reviewers;
+    const paper_id = req.body.paper_id;
+
+    console.log(paper_id)
+    console.log(reviewers)
+
+    if(reviewers.length > 0){
+      for(let i=0; i<reviewers.length; i++){
+        user_details = await User.findOne({login_id: reviewers[i]})
+
+        if (!user_details) {
+          throw Error("User not found")
+        }
+
+        user_details.review_papers.push(paper_id);
+        
+        update_result = await User.findOneAndReplace({login_id: reviewers[i]}, user_details);
+
+        if (!update_result) {
+          throw Error("Couldn't assign paper to author")
+        }
+      }
+    }
+
+    if(paper_id && reviewers.length > 0){
+      paper_details = await Paper.findOne({_id: paper_id})
+
+      for(let i=0; i<reviewers.length; i++){
+
+        if (!paper_details) {
+          throw Error("Paper not found")
+        }
+
+        paper_details.reviewers.push(reviewers[i]);
+      }
+      update_result = await Paper.findOneAndReplace({_id: paper_id}, paper_details);
+      if (!update_result) {
+        throw Error("Couldn't assign paper to author")
+      }
+    }
+
+    res.json({ status: true })
+
+  } catch(error) {
+    console.log(error.message);
+    res.json({status: false});
+  }
+
+})
 module.exports = router;
