@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from "react";
 import { useParams } from "react-router-dom";
-import { Typography, TextField, Button, Container } from "@mui/material";
+import { Typography, TextField, Button, Container, Autocomplete } from "@mui/material";
 import ArticleIcon from '@mui/icons-material/Article';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
@@ -8,6 +8,9 @@ import Comment from "../components/Comment";
 
 
 function ReviewPage() {
+  
+  const [isAdmin, SetIsAdmin] = useState(true);
+  const [reviewers, setReviewers] = useState([]);
 
   const {paperId} = useParams();
   const [publishedComments, setCommentsList] = useState(["B", "r", "u"]);
@@ -20,9 +23,33 @@ function ReviewPage() {
   let login_id = "rishabh8124@kgpian.iitkgp.ac.in";
   if (user) { login_id = user.login_id }
 
+  // check if user is admin
+  if(login_id === 'admin'){
+    SetIsAdmin(true)
+  } 
+
   const viewPDF = async () => {
     window.open(url, '_blank');
   }
+
+  // Getting list of users
+  async function getReviewers() {
+    try{
+      let result = await fetch(
+        'http://localhost:4000/upload', {
+          method: "GET",
+          headers:{
+            'Content-Type': 'application/json'
+          }
+        });
+        result = await result.json()
+
+        setReviewers(result.users)
+
+    }catch(err){
+      console.log(err)
+    }}
+    
 
   // TO DO:
 
@@ -72,6 +99,8 @@ function ReviewPage() {
 
   useEffect(() => {
     start_func();
+    getReviewers();
+    console.log(reviewers);
   }, []) 
 
   return (
@@ -101,6 +130,25 @@ function ReviewPage() {
       ))}
       
       </Typography>
+      (
+        isAdmin &&
+        <Autocomplete
+        multiple
+        id="tags-outlined"
+        options={reviewers}
+        getOptionLabel={(option) => option}
+        defaultValue={[]}
+        filterSelectedOptions
+        onChange={(event, value) => {setAuthors(value)}}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="filterSelectedOptions"
+            placeholder="Favorites"
+          />
+        )}
+      />
+      )
     </Container>
   );
   
