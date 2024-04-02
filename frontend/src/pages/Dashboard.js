@@ -31,7 +31,6 @@ const Dashboard = () => {
         result = await result.json();
 
         let temp_blogs = []
-        let temp_ids = []
 
         if (result.blogs) {
           for(let i=0; i < result.blogs.length; i++) {
@@ -43,7 +42,6 @@ const Dashboard = () => {
           }
 
           setPublishedBlogs([...publishedBlogs, ...temp_blogs])
-          console.log(publishedBlogs)
         }
     } catch(error) {
       console.log(error);
@@ -93,7 +91,7 @@ const Dashboard = () => {
           {tabValue === 0 && (
             <>
               {publishedBlogs.map((blog, index) => (
-                <Link key={index} href={`/review/paperId=${blog.id}`} >
+                <Link key={index} href={`/review/${blog.id}`} >
                   <Box key={index} sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, mb: 2 }}>
                     <Typography variant="h6" gutterBottom>
                       {blog.title}

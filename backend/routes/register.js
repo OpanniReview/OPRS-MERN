@@ -165,7 +165,6 @@ router.post('/upload', upload.single('file'), async(req, res) => {
       update_result = await User.findOneAndReplace({login_id: authors[i]}, user_details);
 
       if (!update_result) {
-        console.log(authors[i])
         throw Error("Couldn't publish paper to the author")
       }
     }
@@ -222,7 +221,6 @@ router.post('/getpaperdetails', async(req, res) => {
 
   try {
     const paper_id = req.body.paper_id
-    console.log(paper_id)
     let result = await Paper.find({_id: paper_id});
     if (result) {
       res.json({
