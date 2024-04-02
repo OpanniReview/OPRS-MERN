@@ -192,23 +192,31 @@ router.post('/fetchallpapers', async(req, res) => {
   try{
     const login_id = req.body.login_id;
 
-    let result = await User.find({login_id});
-    if (!result) {
+    let resultNew = await User.find({login_id});
+    if (!resultNew) {
       throw Error("User not found");
     }
-    result = result[0].published_papers;
+    result = resultNew[0].published_papers;
+    result1 = resultNew[0].review_papers;
 
     let papers = [];
+    let review = []
 
     let paper_result = "";
+    let review_result = "";
 
     for (let i=0; i<result.length; i++) {
       paper_result = await Paper.findById(result[i]);
       papers.push(paper_result);
     }
 
+    for (let i=0; i<result1.length; i++) {
+      review_result = await Paper.findById(result1[i]);
+      review.push(review_result);
+    }
+
     res.json({
-      blogs: papers, status: true
+      blogs: papers, status: true, reviewPapers: review
     })
   } catch(error) {
     console.log(error.message);

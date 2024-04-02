@@ -16,6 +16,8 @@ const Dashboard = () => {
 
   const [publishedBlogs, setPublishedBlogs] = useState([]);
 
+  const [reviewBlogs, setReviewBlogs] = useState([]);
+
   const [uploadedpage, setUploadedPage] = useState(false);
 
   const func = (async() => {
@@ -31,6 +33,7 @@ const Dashboard = () => {
         result = await result.json();
 
         let temp_blogs = []
+        let temp_blogs1 = []
 
         if (result.blogs) {
           for(let i=0; i < result.blogs.length; i++) {
@@ -40,9 +43,21 @@ const Dashboard = () => {
               id: result.blogs[i]._id
             })
           }
-
           setPublishedBlogs([...publishedBlogs, ...temp_blogs])
         }
+        
+        if(result.reviewPapers){
+          for(let i=0; i < result.reviewPapers.length; i++) {
+            temp_blogs1.push({
+              title: result.reviewPapers[i].title,
+              coAuthors: result.reviewPapers[i].authors,
+              id: result.reviewPapers[i]._id
+            })
+            
+          }
+          setReviewBlogs([...reviewBlogs, ...temp_blogs1])
+        }
+
     } catch(error) {
       console.log(error);
     }
@@ -50,6 +65,7 @@ const Dashboard = () => {
 
   if (uploadedpage === false) {
     func();
+    console.log(publishedBlogs)
     setUploadedPage(true);
   }
 
@@ -83,8 +99,8 @@ const Dashboard = () => {
               textColor="primary"
               variant="fullWidth"
             >
-              <Tab label="Published Blogs" />
-              <Tab label="Draft Blogs" />
+              <Tab label="Papers Published/ Submitted for Review" />
+              <Tab label="Papers To Review" />
             </Tabs>
           </AppBar>
           {/* Display the selected blogs */}
@@ -107,7 +123,7 @@ const Dashboard = () => {
         )}
           {tabValue === 1 && (
             <>
-              {draftBlogs.map((blog, index) => (
+              {reviewBlogs.map((blog, index) => (
                 <Box key={index} sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, mb: 2 }}>
                   <Typography variant="h6" gutterBottom>
                     {blog.title}

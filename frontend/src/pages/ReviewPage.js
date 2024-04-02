@@ -9,7 +9,7 @@ import Comment from "../components/Comment";
 
 function ReviewPage() {
   
-  const [isAdmin, SetIsAdmin] = useState(true);
+  const [isAdmin, SetIsAdmin] = useState(false);
   const [reviewers, setReviewers] = useState([]);
 
   const {paperId} = useParams();
@@ -24,7 +24,7 @@ function ReviewPage() {
   if (user) { login_id = user.login_id }
 
   // check if user is admin
-  if(login_id === 'admin'){
+  if(login_id === 'admin@oprs.edu.in'){
     SetIsAdmin(true)
   } 
 
@@ -103,6 +103,11 @@ function ReviewPage() {
     console.log(reviewers);
   }, []) 
 
+  // handle admin review submit
+  const handleReviewSubmit = () => {
+
+  }
+
   return (
     <Container maxWidth="md" style={{ padding: "20px" }}>
       <Typography variant="h4" gutterBottom style={{ textAlign: "left"}}>
@@ -130,25 +135,31 @@ function ReviewPage() {
       ))}
       
       </Typography>
-      (
+      {
         isAdmin &&
-        <Autocomplete
-        multiple
-        id="tags-outlined"
-        options={reviewers}
-        getOptionLabel={(option) => option}
-        defaultValue={[]}
-        filterSelectedOptions
-        onChange={(event, value) => {setAuthors(value)}}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="filterSelectedOptions"
-            placeholder="Favorites"
-          />
-        )}
-      />
-      )
+        (
+          <>
+            <Autocomplete
+            multiple
+            id="tags-outlined"
+            options={reviewers}
+            getOptionLabel={(option) => option}
+            defaultValue={[]}
+            filterSelectedOptions
+            onChange={(event, value) => {setAuthors(value)}}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select Reviewers"
+                placeholder="Favorites"
+              />
+              )}
+            />
+            <Button variant="submit" component="span" onClick={handleReviewSubmit}>
+              Approve Reviewers
+            </Button>
+          </>)
+      }
     </Container>
   );
   
