@@ -4,6 +4,7 @@ import Registerationform from './pages/RegistrationForm';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import UploadPage from './pages/UploadPage';
+import Admin from './pages/Admin';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ReviewPage from './pages/ReviewPage';
@@ -40,6 +41,10 @@ function App() {
             <Route 
               path = "/review/:paperId"
               element = {<ReviewPage />}
+            />
+            <Route 
+              path = "/admin"
+              element = {<Admin />}
             />
           </Routes>
         </BrowserRouter>

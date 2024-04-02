@@ -14,7 +14,9 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+import Admin from '../pages/Admin';
+
+const pages = ['upload', 'admin'];
 
 const ResponsiveNavbar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -82,16 +84,22 @@ const ResponsiveNavbar = () => {
           >
             LOGO
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
-            <Button
-              key="upload"
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-              href='/upload'
-            >
-              Upload
-            </Button>
-          </Box>
+          {
+            pages.map((page, index) => {
+              return (
+              <Box key={index} sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
+                <Button
+                  key={page.toUpperCase()}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                  href={`/${page}`}
+                >
+                  {page}
+                </Button>
+              </Box>
+              )
+            })
+          }
         </Toolbar>
       </Container>
     </AppBar>
