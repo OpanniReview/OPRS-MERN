@@ -6,7 +6,15 @@ import ArticleIcon from '@mui/icons-material/Article';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 
-function Comment({disable = "False", user="xyz", comment=""}) {
+function Comment({disable = "False", user="xyz", comment="", login_id="None", check_login_id="No"}) {
+
+    if(login_id === check_login_id){
+        let disable = "False";
+    }
+    else{
+        let disable = "True";
+    }
+
     if(disable === "True"){
         let reviewUser = "Posted by reviewer " + user;
 

@@ -17,6 +17,8 @@ function ReviewPage() {
   console.log(paperId)
 
   const [publishedComments, setCommentsList] = useState(["B", "r", "u"]);
+  const [Reviewers, setReviewers] = useState([]);
+
   const [Authors, setAuthors] = useState([])
   const [Abstract, setAbstract] = useState("")
   const [url, seturl] = useState(null);
@@ -66,6 +68,7 @@ function ReviewPage() {
         setCommentsList([...publishedComments, ...response.comments]);
         setAuthors(response.authors)
         setTitle(response.title)
+        setReviewers(response.reviewers)
         
       } else {
         alert('Error uploading file');
@@ -102,7 +105,7 @@ function ReviewPage() {
 
       {publishedComments.map((comment, index) => (
         <Box key={index} sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, mb: 2 }}>
-          <Comment disable="True" comment={comment}/>
+          <Comment disable="True" comment={comment} login_id={login_id} check_login_id={Reviewers[index]}/>
         </Box>
       ))}
       
