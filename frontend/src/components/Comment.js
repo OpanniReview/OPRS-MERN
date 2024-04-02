@@ -7,15 +7,10 @@ import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 
 function Comment({disable = "False", user="xyz", comment="", login_id="None", check_login_id="No"}) {
+    
+    
 
-    if(login_id === check_login_id){
-        let disable = "False";
-    }
-    else{
-        let disable = "True";
-    }
-
-    if(disable === "True"){
+    if(login_id != check_login_id){
         let reviewUser = "Posted by reviewer " + user;
 
         return (
@@ -32,6 +27,8 @@ function Comment({disable = "False", user="xyz", comment="", login_id="None", ch
     }
     else{
         return (
+            
+            <>
             <TextField
             multiline
             rows={4}
@@ -39,9 +36,14 @@ function Comment({disable = "False", user="xyz", comment="", login_id="None", ch
             fullWidth
             margin="normal"
             label="Your Review">Bruh</TextField>
+
+            {/* <Button onClick={addReview}>Add Review</Button> */}
+            </>
         );
     }
     
 }
+
+
 
 export default Comment;

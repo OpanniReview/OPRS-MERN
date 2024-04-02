@@ -10,7 +10,7 @@ import Comment from "../components/Comment";
 function ReviewPage() {
 
   const {paperId} = useParams();
-  const [publishedComments, setCommentsList] = useState(["B", "r", "u"]);
+  const [publishedComments, setCommentsList] = useState(["", "", ""]);
   const [Reviewers, setReviewers] = useState([]);
 
   const [Authors, setAuthors] = useState([])
@@ -22,9 +22,13 @@ function ReviewPage() {
   let login_id = "rishabh8124@kgpian.iitkgp.ac.in";
   if (user) { login_id = user.login_id }
 
+  
+
   const viewPDF = async () => {
     window.open(url, '_blank');
   }
+
+  
 
   // TO DO:
 
@@ -40,6 +44,10 @@ function ReviewPage() {
 
   let comment = "Summary Of Contributions: This study investigates the In-Sample Softmax (INAC) algorithm for Offline RL, focusing on learning from fixed datasets with incomplete action coverage. It compares INAC to similar algorithms across various environments, revealing its robust performance and competitive advantages. The analysis underscores INAC's potential in addressing offline RL challenges. \n Strengths And Weaknesses: \n Strength:This paper is clearly written and easy to follow.";
   
+  const addReview = async () => {
+    console.log("Bruh");
+  }
+
   const start_func = async() => {
     try {
       let response = await fetch('http://localhost:4000/getpaperdetails', {
@@ -62,7 +70,9 @@ function ReviewPage() {
         setCommentsList([...publishedComments, ...response.comments]);
         setAuthors(response.authors)
         setTitle(response.title)
-        setReviewers(response.reviewers)
+        setReviewers([...Reviewers, ...response.reviewers])
+
+        console.log(Reviewers)
         
       } else {
         alert('Error uploading file');
@@ -100,6 +110,7 @@ function ReviewPage() {
       {publishedComments.map((comment, index) => (
         <Box key={index} sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, mb: 2 }}>
           <Comment disable="True" comment={comment} login_id={login_id} check_login_id={Reviewers[index]}/>
+          {(Reviewers[index] === login_id) && <Button onClick={addReview}>Add Review</Button>}
         </Box>
       ))}
       
