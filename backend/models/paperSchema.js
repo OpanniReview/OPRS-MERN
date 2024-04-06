@@ -20,7 +20,7 @@ const paperSchema = new mongoose.Schema({
     reviewers: [String],
     authors: [String],
     abstract: String,
-    comments: [[[String, String]]]
+    comments: [String]
 }, { timestamps: true });
 
 module.exports = mongoose.model('papers', paperSchema)

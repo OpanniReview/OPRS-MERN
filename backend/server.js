@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
-const credentialRoutes = require('./routes/register')
+const credentialRoutes = require('./routes/routes.js')
 
 const mongoURL = "mongodb+srv://TEST:test123@oprs.mqv8nlo.mongodb.net/OPRS";
 

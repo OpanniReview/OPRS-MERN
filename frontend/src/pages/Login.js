@@ -37,8 +37,11 @@ const Login = () => {
         if (result.status) {
 
           localStorage.setItem('user', JSON.stringify({login_id: email}))
-
-          navigate('/dashboard', {required: true});
+          if (email === 'admin@oprs.edu.com') {
+            navigate('/admin', {required: true});
+          } else {
+            navigate('/dashboard', {required: true});
+          }
         } else {
           console.log("Signin Fail");
         }

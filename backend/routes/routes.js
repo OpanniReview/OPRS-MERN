@@ -141,7 +141,8 @@ router.post('/upload', upload.single('file'), async(req, res) => {
       pdfdata: file.buffer,
       isPublished: false,
       authors: authors,
-      abstract: abstract
+      abstract: abstract,
+      comments: ['', '', '']
     })
 
     if (!publish_paper) {
@@ -196,6 +197,7 @@ router.post('/fetchallpapers', async(req, res) => {
     if (!resultNew) {
       throw Error("User not found");
     }
+    
     result = resultNew[0].published_papers;
     result1 = resultNew[0].review_papers;
 
@@ -228,33 +230,20 @@ router.post('/fetchallpapers', async(req, res) => {
 router.post('/fetchallpapersAdmin', async(req, res) => {
   try{
 
-    let resultNew = await Paper.find({isPublished: 'false'});
+    let resultNew = await Paper.find({reviewers: []});
     if (!resultNew) {
       throw Error("Papers empty");
     }
-    // result = resultNew[0].published_papers;
-    // result1 = resultNew[0].review_papers;
 
-    // let papers = [];
-    // let review = [];
-
-    // let paper_result = "";
-    // let review_result = "";
-
-    // for (let i=0; i<result.length; i++) {
-    //   paper_result = await Paper.findById(result[i]);
-    //   papers.push(paper_result);
-    // }
-
-    // for (let i=0; i<result1.length; i++) {
-    //   review_result = await Paper.findById(result1[i]);
-    //   review.push(review_result);
-    // }
+    let resultnext = await Paper.find({reviewers: {$ne:[]}, isPublished:false});
+    if (!resultnext) {
+      throw Error("Papers empty");
+    }
 
     res.json({
-      blogs: resultNew, status: true
+      blogs: resultNew, status: true, reviewers_assigned: resultnext
     })
-    console.log(resultNew)
+
   } catch(error) {
     console.log(error.message);
     res.json({status: false});
@@ -287,10 +276,7 @@ router.post('/adminUpload', async(req, res) => {
     const reviewers = req.body.reviewers;
     const paper_id = req.body.paper_id;
 
-    console.log(paper_id)
-    console.log(reviewers)
-
-    if(reviewers.length > 0){
+    if(paper_id && reviewers.length > 0){
       for(let i=0; i<reviewers.length; i++){
         user_details = await User.findOne({login_id: reviewers[i]})
 
@@ -306,19 +292,10 @@ router.post('/adminUpload', async(req, res) => {
           throw Error("Couldn't assign paper to author")
         }
       }
-    }
 
-    if(paper_id && reviewers.length > 0){
       paper_details = await Paper.findOne({_id: paper_id})
-
-      for(let i=0; i<reviewers.length; i++){
-
-        if (!paper_details) {
-          throw Error("Paper not found")
-        }
-
-        paper_details.reviewers.push(reviewers[i]);
-      }
+      paper_details.reviewers = reviewers;
+      
       update_result = await Paper.findOneAndReplace({_id: paper_id}, paper_details);
       if (!update_result) {
         throw Error("Couldn't assign paper to author")
@@ -333,4 +310,30 @@ router.post('/adminUpload', async(req, res) => {
   }
 
 })
+
+router.post('/addcomment', async(req, res) => {
+
+  try{
+    const paper_id = req.body.paper_id
+    let result = await Paper.find({_id: paper_id});
+    if (result) {
+      result = result[0];
+      result.comments = req.body.comment;
+      let update_result = await Paper.findOneAndReplace({_id: paper_id}, result);
+      if (update_result) {
+        res.json({
+          status: true
+        })
+      } else {
+        res.json({
+          status: false
+        })
+      }
+    }
+  } catch(error) {
+    console.log(error.message);
+    res.json({status:false});
+  }
+})
+
 module.exports = router;

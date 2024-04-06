@@ -8,15 +8,12 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-import Admin from '../pages/Admin';
-
-const pages = ['upload', 'admin'];
+const pages = ['upload', 'logout'];
+const href_pages = ['upload', 'login']
 
 const ResponsiveNavbar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -25,7 +22,11 @@ const ResponsiveNavbar = () => {
     setAnchorElNav(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (index) => {
+    if (index === 1) {
+      localStorage.setItem('user', null)
+    }
+
     setAnchorElNav(null);
   };
 
@@ -71,8 +72,11 @@ const ResponsiveNavbar = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              <MenuItem key='upload' onClick={handleCloseNavMenu}>
+              <MenuItem key='upload' onClick={() => {handleCloseNavMenu(0)}}>
                 <Link href="/upload">Upload</Link>
+              </MenuItem>
+              <MenuItem key='logout' onClick={() => {handleCloseNavMenu(1)}}>
+                <Link href="/login">Logout</Link>
               </MenuItem>
             </Menu>
           </Box>
@@ -90,9 +94,9 @@ const ResponsiveNavbar = () => {
               <Box key={index} sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
                 <Button
                   key={page.toUpperCase()}
-                  onClick={handleCloseNavMenu}
+                  onClick={(event) => handleCloseNavMenu(index)}
                   sx={{ my: 2, color: 'white', display: 'block' }}
-                  href={`/${page}`}
+                  href={`/${href_pages[index]}`}
                 >
                   {page}
                 </Button>

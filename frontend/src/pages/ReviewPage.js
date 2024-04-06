@@ -4,108 +4,55 @@ import { Typography, TextField, Button, Container, Autocomplete } from "@mui/mat
 import ArticleIcon from '@mui/icons-material/Article';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
-import Comment from "../components/Comment";
 import { useNavigate } from 'react-router-dom';
 
+// import Comment from "../components/Comment";
 
 function ReviewPage() {
 
   const navigate = useNavigate();
   
-  const [isAdmin, SetIsAdmin] = useState(true);
+  const [isAdmin, SetIsAdmin] = useState(false);
   const [reviewersAvail, setReviewersAvail] = useState([]);
   const [reviewersSelected, setReviewersSelected] = useState([]);
 
   const {paperId} = useParams();
-  const [publishedComments, setCommentsList] = useState(["B", "r", "u"]);
+  const [publishedComments, setCommentsList] = useState([]);
+  const [tempComments, setTempComments] = useState([]);
+  const [Reviewers, setReviewers] = useState([]);
+
   const [Authors, setAuthors] = useState([])
   const [Abstract, setAbstract] = useState("")
   const [url, seturl] = useState(null);
   const [title, setTitle] = useState("");
 
   const user = JSON.parse(localStorage.getItem('user'));
-  let login_id = "rishabh8124@kgpian.iitkgp.ac.in";
-  if (user) { login_id = user.login_id }
-
-  // check if user is admin
-  if(login_id === 'admin@oprs.edu.in'){
-    SetIsAdmin(true)
-  } 
-
+  const [login_id, setLogin] = useState("")
+  const [start_render, setart] = useState(true)
+  
   const viewPDF = async () => {
     window.open(url, '_blank');
   }
 
-  // Getting list of users
-  async function getReviewers() {
-    try{
-      let result = await fetch(
-        'http://localhost:4000/upload', {
-          method: "GET",
-          headers:{
-            'Content-Type': 'application/json'
-          }
-        });
-        result = await result.json()
-
-        setReviewersAvail(result.users)
-
-    }catch(err){
-      console.log(err)
-    }}
-    
-
-  // TO DO:
-
-  // Authors should be made variable, linked to their profiles
-  // link to the paper to be integrated
-  // title to be integrated
-  // abstract to be integrated
-
-  // Authors visibility changes
-  // Reviewer visibility changes
-  // Comments / Reviews to be recorded, streamlined properly
-  // Comment components should be such that it is like a thread to the main comment / review.
-
-  let comment = "Summary Of Contributions: This study investigates the In-Sample Softmax (INAC) algorithm for Offline RL, focusing on learning from fixed datasets with incomplete action coverage. It compares INAC to similar algorithms across various environments, revealing its robust performance and competitive advantages. The analysis underscores INAC's potential in addressing offline RL challenges. \n Strengths And Weaknesses: \n Strength:This paper is clearly written and easy to follow.";
-  
-  const start_func = async() => {
+  const addReview = async (event, index) => {
+    setCommentsList([...tempComments])
     try {
-      let response = await fetch('http://localhost:4000/getpaperdetails', {
+      let response = await fetch('http://localhost:4000/addcomment', {
         method: 'POST',
-        body: JSON.stringify({paper_id: paperId}),
+        body: JSON.stringify({paper_id: paperId, comment: tempComments}),
         headers: {
           'Content-Type': 'application/json'
         }
       });
 
-      response = await response.json();
-      if (response.status) {
-        response = response.paper_details[0]
-
-        const byteArray = new Uint8Array(response.pdfdata.data);
-        const blob = new Blob([byteArray], { type: 'application/pdf' });
-
-        seturl(URL.createObjectURL(blob));
-        setAbstract(response.abstract);
-        setCommentsList([...publishedComments, ...response.comments]);
-        setAuthors(response.authors)
-        setTitle(response.title)
-        
-      } else {
-        alert('Error uploading file');
+      if (response) {
+        response = response.json();
       }
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      alert('Error uploading file');
+    } catch(error) {
+      console.log(error.message);
     }
   }
-
-  useEffect(() => {
-    start_func();
-    getReviewers();
-  }, []) 
-
+  
   // handle admin review submit
   const handleReviewSubmit = async (event) => {
     
@@ -115,10 +62,12 @@ function ReviewPage() {
         reviewers : reviewersSelected,
         paper_id : paperId
       }
-  
-      console.log(paperId)
 
       try {
+        if (reviewersSelected.length !== 3) {
+          throw Error("Select 3 reviewers")
+        }
+
         let response = await fetch('http://localhost:4000/adminUpload', {
           method: 'POST',
           body: JSON.stringify(reviewers),
@@ -132,15 +81,93 @@ function ReviewPage() {
           navigate('/admin', {replace: true});
           
         } else {
-          alert('Error assigning reviewers');
+          throw Error("Reviewers not assigned");
         }
       } catch (error) {
-        console.error('Error assigining reviewers:', error);
-        alert('Error assigning reviewers');
+        console.log(error.message);
+      }
+  }
+
+  const onChangefield = (event, index) => {
+    setTempComments(values => values.map((value, i) => i === index ? event.target.value: value));
+  }
+
+  useEffect(() => {
+    if (start_render) {
+      if (user) { setLogin(user.login_id) }
+      else { navigate('/login', {required: true}) }
+
+      // check if user is admin
+      if(user.login_id === 'admin@oprs.edu.com'){
+        SetIsAdmin(true)
+      } 
+
+      async function start_func() {
+        try {
+          let response = await fetch('http://localhost:4000/getpaperdetails', {
+            method: 'POST',
+            body: JSON.stringify({paper_id: paperId}),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+    
+          response = await response.json();
+          if (response.status) {
+            response = response.paper_details[0]
+    
+            const byteArray = new Uint8Array(response.pdfdata.data);
+            const blob = new Blob([byteArray], { type: 'application/pdf' });
+    
+            seturl(URL.createObjectURL(blob));
+            setAbstract(response.abstract);
+            setCommentsList([...publishedComments, ...response.comments]);
+            setTempComments([...tempComments, ...response.comments])
+            setAuthors(response.authors)
+            setTitle(response.title)
+            setReviewers([...Reviewers, ...response.reviewers])
+            console.log(response.reviewers);
+            
+          } else {
+            alert('Error uploading file');
+          }
+        } catch (error) {
+          console.error('Error uploading file:', error);
+          alert('Error uploading file');
+        }
       }
 
+      start_func();
 
-  }
+      async function getReviewers() {
+        try{
+          let result = await fetch(
+            'http://localhost:4000/upload', {
+              method: "GET",
+              headers:{
+                'Content-Type': 'application/json'
+              }
+            });
+
+            function check_admin(value) {
+              return (value !== 'admin@oprs.edu.com')
+            }
+            result = await result.json()
+            let users = result.users
+            users = users.filter(check_admin)            
+    
+            setReviewersAvail(users)
+    
+        }catch(err){
+          console.log(err)
+        }
+      }
+
+      getReviewers();
+      setart(false)
+    }
+  }, [login_id, navigate, user, Reviewers, paperId, publishedComments, start_render, tempComments]) 
+
 
   return (
     <Container maxWidth="md" style={{ padding: "20px" }}>
@@ -164,13 +191,22 @@ function ReviewPage() {
 
       {publishedComments.map((comment, index) => (
         <Box key={index} sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, mb: 2 }}>
-          <Comment disable="True" comment={comment}/>
+          <TextField
+            disabled={Reviewers[index] !== login_id}
+            multiline
+            rows={4}
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={tempComments[index]}
+            onChange={(event) => {onChangefield(event, index)}}>Bruh</TextField>
+          {(Reviewers[index] === login_id) && <Button onClick={(event) => addReview(event, index)}>Add Review</Button>}
         </Box>
       ))}
       
       </Typography>
       {
-        isAdmin &&
+        isAdmin && (Reviewers.length === 0) &&
         (
           <>
             <Autocomplete

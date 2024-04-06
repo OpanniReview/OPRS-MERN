@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -12,7 +11,7 @@ import Container from '@mui/material/Container';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const Registerationform = () => {
@@ -24,11 +23,14 @@ const Registerationform = () => {
   const location = useLocation();
 
   const user = JSON.parse(localStorage.getItem('user'));
-  const login_id = user.login_id;
+
+  const [login_id, setLogin] = useState("")
+
+  const [start_render, setart] = useState(0)
   
-  const first_name = location.state.first_name;
-  const last_name = location.state.last_name;
-  const [name, setName] = useState(first_name + " " + last_name);
+  const [first_name, setFirst] = useState("")
+  const [last_name, setLast] = useState("")
+  const [name, setName] = useState("");
 
   const handleSubmit = async(event) => {
     event.preventDefault();
@@ -62,6 +64,20 @@ const Registerationform = () => {
   const handleChange = (e, setState) => {
     setState(e.target.value)
   };
+
+  useEffect(() => {
+    if (start_render) {
+      if (user) { setLogin(user.login_id) }
+      else { navigate('/login', {required: true}) }
+
+      if (location.state) {
+        setFirst(location.state.first_name)
+        setLast(location.state.last_name)
+        setName(first_name + " " + last_name)
+      }
+      setart(false)
+    }
+  }, [start_render, first_name, last_name, location.state, navigate, user])
 
   return (
     <Container component="main" maxWidth="xs">

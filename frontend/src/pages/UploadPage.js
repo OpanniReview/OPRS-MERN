@@ -8,8 +8,19 @@ function UploadPage() {
   const navigate = useNavigate();
   
   const user = JSON.parse(localStorage.getItem('user'));
-  let login_id = "rishabh8124@kgpian.iitkgp.ac.in";
-  if (user) { login_id = user.login_id }
+
+  const [login_id, setLogin] = useState("")
+
+  const login_check = () => {
+    if (user) { setLogin(user.login_id) }
+    else { navigate('/login', {required: true}) }
+  }
+
+  const [start_render, setart] = useState(true)
+
+  useEffect(() => {
+    if (start_render) {login_check(); setart(false)}
+  }, [login_check, setart, start_render])
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileName, setFileName] = useState(null);
