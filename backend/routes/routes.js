@@ -244,8 +244,13 @@ router.post('/fetchallpapersAdmin', async(req, res) => {
       throw Error("Papers empty");
     }
 
+    let resultPub = await Paper.find({reviewers: {$ne:[]}, isPublished:true});
+    if (!resultnext) {
+      throw Error("Papers empty");
+    }
+
     res.json({
-      blogs: resultNew, status: true, reviewers_assigned: resultnext
+      blogs: resultNew, status: true, reviewers_assigned: resultnext, published_blogs: resultPub
     })
 
   } catch(error) {
