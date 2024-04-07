@@ -26,3 +26,5 @@ mongoose.connect(mongoURL).then(() => {
   console.log("SUCCESS");
 	app.listen(4000)
 });
+
+module.exports = {app}
