@@ -37,11 +37,7 @@ router.post("/signup", async (req, res) => {
       throw Error("Email is not from educational institution")
     }
 
-    const salt = await bcrypt.genSalt(10)
-    const hash = await bcrypt.hash(password, salt)
-
-    const credential = await Credential.create({ login_id:email, password:hash });
-    res.json({status: !(!(credential))});
+    res.json({status: !(!(true))});
   } catch (error) {
     console.log(error.message)
     res.json({ status: false });
@@ -73,8 +69,16 @@ router.post("/register", async (req, res) => {
   const degree = req.body.degree;
   const personal_link = req.body.personal_link;
   const profession = req.body.professionalStatus;
+  const password = req.body.password;
 
   try {
+    // Save the User credentials
+    const salt = await bcrypt.genSalt(10)
+    const hash = await bcrypt.hash(password, salt)
+
+    const credential = await Credential.create({ login_id:email, password:hash });
+
+
     if (!first_name || !last_name || !gender || !degree || !profession) {
       throw Error("All compulsory fields should be filled")
     }

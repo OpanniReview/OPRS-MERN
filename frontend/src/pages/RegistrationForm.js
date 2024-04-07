@@ -24,8 +24,11 @@ const Registerationform = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
 
-  const [login_id, setLogin] = useState("")
   
+  
+  // info from register page
+  const [login_id, setLogin] = useState("")
+  const [password, setPassword] = useState("")
   const [first_name, setFirst] = useState("")
   const [last_name, setLast] = useState("")
   const [name, setName] = useState("");
@@ -41,7 +44,7 @@ const Registerationform = () => {
       let result = await fetch(
         'http://localhost:4000/register', {
           method: "post",
-          body: JSON.stringify({login_id, first_name, last_name, gender, dob, email, degree, personal_link, professionalStatus}),
+          body: JSON.stringify({login_id, first_name, last_name, gender, dob, email, degree, personal_link, professionalStatus, password}),
           headers: {
             'Content-Type': 'application/json'
           }
@@ -71,6 +74,7 @@ const Registerationform = () => {
       setFirst(location.state.first_name)
       setLast(location.state.last_name)
       setName(location.state.first_name + " " + location.state.last_name)
+      setPassword(location.state.password)
     }
   }, [ ])
 

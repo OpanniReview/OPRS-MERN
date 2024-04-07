@@ -36,7 +36,7 @@ const Register = () => {
 
         if (result.status) {
           localStorage.setItem('user', JSON.stringify({login_id: email}));
-          navigate('/register', {replace: true, state: {first_name, last_name}});
+          navigate('/register', {replace: true, state: {first_name, last_name, password}});
         } else {
           console.log("Signup Fail");
         }
