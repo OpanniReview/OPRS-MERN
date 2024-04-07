@@ -126,15 +126,17 @@ const Dashboard = () => {
           {tabValue === 1 && (
             <>
               {reviewBlogs.map((blog, index) => (
-                <Box key={index} sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, mb: 2 }}>
-                  <Typography variant="h6" gutterBottom>
-                    {blog.title}
-                  </Typography>
-                  <Typography variant="subtitle2" gutterBottom>
-                    Last Edited: {blog.lastEdited}
-                  </Typography>
-                  {/* Add more details about the draft blog if needed */}
-                </Box>
+                <Link key={index} href={`/review/${blog.id}`} >
+                  <Box key={index} sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, mb: 2 }}>
+                    <Typography variant="h6" gutterBottom>
+                      {blog.title}
+                    </Typography>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Last Edited: {blog.lastEdited}
+                    </Typography>
+                    {/* Add more details about the draft blog if needed */}
+                  </Box>
+                </Link>
               ))}
             </>
           )}

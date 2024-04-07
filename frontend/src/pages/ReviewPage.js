@@ -25,6 +25,7 @@ function ReviewPage() {
   const [Abstract, setAbstract] = useState("")
   const [url, seturl] = useState(null);
   const [title, setTitle] = useState("");
+  const [published, setPublished] = useState(false)
 
   const user = JSON.parse(localStorage.getItem('user'));
   const [login_id, setLogin] = useState("")
@@ -126,6 +127,7 @@ function ReviewPage() {
             setAuthors(response.authors)
             setTitle(response.title)
             setReviewers([...Reviewers, ...response.reviewers])
+            setPublished(response.isPublished)
             console.log(response.reviewers);
             
           } else {
@@ -174,9 +176,9 @@ function ReviewPage() {
       <Typography variant="h4" gutterBottom style={{ textAlign: "left"}}>
         {title} <IconButton onClick={viewPDF}><ArticleIcon variant="contained">Access PDF</ArticleIcon></IconButton>
 
-        <Typography variant="body2" gutterBottom>
+       {(published) && <Typography variant="body2" gutterBottom>
         {Authors}
-        </Typography>
+        </Typography>}
       </Typography>
       
       <Typography variant="subtitle1" gutterBottom style={{ fontWeight: "bold" }}>

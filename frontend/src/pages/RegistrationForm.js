@@ -73,7 +73,7 @@ const Registerationform = () => {
       if (location.state) {
         setFirst(location.state.first_name)
         setLast(location.state.last_name)
-        setName(first_name + " " + last_name)
+        setName(location.state.first_name + " " + location.state.last_name)
       }
       setart(false)
     }
