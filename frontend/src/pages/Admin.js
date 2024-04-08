@@ -31,7 +31,9 @@ const Admin = () => {
       }
       setstart(false);
     }
-  }, [navigate, user, setstart, start_render]);
+
+    func()
+  },[]);
 
   const [submittedBlogs, setSubmittedBlogs] = useState([]);
 
@@ -64,9 +66,10 @@ const Admin = () => {
             id: result.blogs[i]._id
           });
         }
-
         setSubmittedBlogs([...submittedBlogs, ...temp_blogs]);
+      }
 
+      if (result.reviewers_assigned) {
         for (let i = 0; i < result.reviewers_assigned.length; i++) {
           temp_blogs_1.push({
             title: result.reviewers_assigned[i].title,
@@ -75,9 +78,11 @@ const Admin = () => {
             id: result.reviewers_assigned[i]._id
           });
         }
-
+  
         setDraftBlogs([...draftBlogs, ...temp_blogs_1]);
+      }
 
+      if (result.published_blogs) {
         for (let i = 0; i < result.published_blogs.length; i++) {
           temp_blogs_2.push({
             title: result.published_blogs[i].title,
@@ -85,9 +90,13 @@ const Admin = () => {
             id: result.published_blogs[i]._id
           });
         }
-
+  
         setPublishedBlogs([...publishedBlogs, ...temp_blogs_2]);
+        console.log("Published: ", publishedBlogs)
+
       }
+
+      console.log(result)
     } catch (error) {
       console.log(error);
     }
@@ -172,7 +181,7 @@ const Admin = () => {
                       {blog.title}
                     </Typography>
                     <Typography variant="subtitle2" gutterBottom>
-                      Reviewers: {blog.reviewers}
+                      Reviewers: {blog.reviewers.toString()}
                     </Typography>
                     {/* Add more details about the draft blog if needed */}
                   </Box>
@@ -180,9 +189,9 @@ const Admin = () => {
               ))}
             </>
           )}
-          {tabValue === 1 && (
+          {tabValue === 2 && (
             <>
-              {draftBlogs.map((blog, index) => (
+              {publishedBlogs.map((blog, index) => (
                 <Link key={index} href={`/review/${blog.id}`}>
                   <Box
                     key={index}

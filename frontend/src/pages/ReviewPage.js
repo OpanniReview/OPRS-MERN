@@ -93,6 +93,37 @@ function ReviewPage() {
     setTempComments(values => values.map((value, i) => i === index ? event.target.value: value));
   }
 
+  const handlePublish = async (event) => {
+    
+    event.preventDefault();
+
+    const msg = {
+      paper_id : paperId,
+      isPublished : true
+    }
+
+    try {
+
+      let response = await fetch('http://localhost:4000/adminPublish', {
+        method: 'POST',
+        body: JSON.stringify(msg),
+        headers:{
+          'Content-Type': 'application/json'
+        }
+      });
+
+      response = await response.json();
+      if (response.status) {
+        navigate('/admin', {replace: true});
+        
+      } else {
+        throw Error("Paper not published");
+      }
+    } catch (error) {
+      console.log(error.message);
+    } 
+  }
+
   useEffect(() => {
     if (start_render) {
       if (user) { setLogin(user.login_id) }
@@ -177,7 +208,7 @@ function ReviewPage() {
         {title} <IconButton onClick={viewPDF}><ArticleIcon variant="contained">Access PDF</ArticleIcon></IconButton>
 
        {(published) && <Typography variant="body2" gutterBottom>
-        {Authors}
+        Authors: {Authors.toString()}
         </Typography>}
       </Typography>
       
@@ -231,6 +262,16 @@ function ReviewPage() {
               Approve Reviewers
             </Button>
           </>)
+      }
+      {
+        isAdmin &&
+        (
+          <>
+            <Button variant="contained" color="success" component="span" onClick={handlePublish}>
+                Publish Paper
+            </Button>
+          </>
+        )
       }
     </Container>
   );

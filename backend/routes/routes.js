@@ -245,9 +245,17 @@ router.post('/fetchallpapersAdmin', async(req, res) => {
     }
 
     let resultPub = await Paper.find({reviewers: {$ne:[]}, isPublished:true});
-    if (!resultnext) {
+    if (!resultPub) {
       throw Error("Papers empty");
     }
+
+    console.log("PAPERS PUBLISHED")
+    console.log("PAPERS PUBLISHED")
+    console.log("PAPERS PUBLISHED")
+    console.log(resultPub['title'])
+    console.log("PAPERS PUBLISHED")
+    console.log("PAPERS PUBLISHED")
+    console.log("PAPERS PUBLISHED")
 
     res.json({
       blogs: resultNew, status: true, reviewers_assigned: resultnext, published_blogs: resultPub
@@ -308,6 +316,31 @@ router.post('/adminUpload', async(req, res) => {
       update_result = await Paper.findOneAndReplace({_id: paper_id}, paper_details);
       if (!update_result) {
         throw Error("Couldn't assign paper to author")
+      }
+    }
+
+    res.json({ status: true })
+
+  } catch(error) {
+    console.log(error.message);
+    res.json({status: false});
+  }
+
+})
+
+router.post('/adminPublish', async(req, res) => {
+  try{
+    const isPublished = req.body.isPublished;
+    const paper_id = req.body.paper_id;
+
+    if(paper_id ){
+      paper_details = await Paper.findOne({_id: paper_id})
+      paper_details.isPublished = isPublished;
+      
+      update_result = await Paper.findOneAndReplace({_id: paper_id}, paper_details);
+      console.log(paper_details)
+      if (!update_result) {
+        throw Error("Couldn't publish paper")
       }
     }
 
