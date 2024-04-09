@@ -24,10 +24,11 @@ const Registerationform = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
 
-  const [login_id, setLogin] = useState("")
-
-  const [start_render, setart] = useState(0)
   
+  
+  // info from register page
+  const [login_id, setLogin] = useState("")
+  const [password, setPassword] = useState("")
   const [first_name, setFirst] = useState("")
   const [last_name, setLast] = useState("")
   const [name, setName] = useState("");
@@ -43,7 +44,7 @@ const Registerationform = () => {
       let result = await fetch(
         'http://localhost:4000/register', {
           method: "post",
-          body: JSON.stringify({login_id, first_name, last_name, gender, dob, email, degree, personal_link, professionalStatus}),
+          body: JSON.stringify({login_id, first_name, last_name, gender, dob, email, degree, personal_link, professionalStatus, password}),
           headers: {
             'Content-Type': 'application/json'
           }
@@ -66,18 +67,16 @@ const Registerationform = () => {
   };
 
   useEffect(() => {
-    if (start_render) {
-      if (user) { setLogin(user.login_id) }
-      else { navigate('/login', {required: true}) }
+    if (user) { setLogin(user.login_id) }
+    else { navigate('/login', {required: true}) }
 
-      if (location.state) {
-        setFirst(location.state.first_name)
-        setLast(location.state.last_name)
-        setName(location.state.first_name + " " + location.state.last_name)
-      }
-      setart(false)
+    if (location.state) {
+      setFirst(location.state.first_name)
+      setLast(location.state.last_name)
+      setName(location.state.first_name + " " + location.state.last_name)
+      setPassword(location.state.password)
     }
-  }, [start_render, first_name, last_name, location.state, navigate, user])
+  }, [ ])
 
   return (
     <Container component="main" maxWidth="xs">

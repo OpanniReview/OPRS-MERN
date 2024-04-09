@@ -37,11 +37,7 @@ router.post("/signup", async (req, res) => {
       throw Error("Email is not from educational institution")
     }
 
-    const salt = await bcrypt.genSalt(10)
-    const hash = await bcrypt.hash(password, salt)
-
-    const credential = await Credential.create({ login_id:email, password:hash });
-    res.json({status: !(!(credential))});
+    res.json({status: !(!(true))});
   } catch (error) {
     console.log(error.message)
     res.json({ status: false });
@@ -73,8 +69,16 @@ router.post("/register", async (req, res) => {
   const degree = req.body.degree;
   const personal_link = req.body.personal_link;
   const profession = req.body.professionalStatus;
+  const password = req.body.password;
 
   try {
+    // Save the User credentials
+    const salt = await bcrypt.genSalt(10)
+    const hash = await bcrypt.hash(password, salt)
+
+    const credential = await Credential.create({ login_id:email, password:hash });
+
+
     if (!first_name || !last_name || !gender || !degree || !profession) {
       throw Error("All compulsory fields should be filled")
     }
@@ -240,8 +244,21 @@ router.post('/fetchallpapersAdmin', async(req, res) => {
       throw Error("Papers empty");
     }
 
+    let resultPub = await Paper.find({reviewers: {$ne:[]}, isPublished:true});
+    if (!resultPub) {
+      throw Error("Papers empty");
+    }
+
+    console.log("PAPERS PUBLISHED")
+    console.log("PAPERS PUBLISHED")
+    console.log("PAPERS PUBLISHED")
+    console.log(resultPub['title'])
+    console.log("PAPERS PUBLISHED")
+    console.log("PAPERS PUBLISHED")
+    console.log("PAPERS PUBLISHED")
+
     res.json({
-      blogs: resultNew, status: true, reviewers_assigned: resultnext
+      blogs: resultNew, status: true, reviewers_assigned: resultnext, published_blogs: resultPub
     })
 
   } catch(error) {
@@ -299,6 +316,31 @@ router.post('/adminUpload', async(req, res) => {
       update_result = await Paper.findOneAndReplace({_id: paper_id}, paper_details);
       if (!update_result) {
         throw Error("Couldn't assign paper to author")
+      }
+    }
+
+    res.json({ status: true })
+
+  } catch(error) {
+    console.log(error.message);
+    res.json({status: false});
+  }
+
+})
+
+router.post('/adminPublish', async(req, res) => {
+  try{
+    const isPublished = req.body.isPublished;
+    const paper_id = req.body.paper_id;
+
+    if(paper_id ){
+      paper_details = await Paper.findOne({_id: paper_id})
+      paper_details.isPublished = isPublished;
+      
+      update_result = await Paper.findOneAndReplace({_id: paper_id}, paper_details);
+      console.log(paper_details)
+      if (!update_result) {
+        throw Error("Couldn't publish paper")
       }
     }
 
