@@ -11,12 +11,14 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
+import { useState, useEffect } from 'react';
 
-const pages = ['upload', 'logout'];
-const href_pages = ['upload', 'login']
+const pages = ['conferences', 'logout'];
+const href_pages = ['conferences', 'login'];
 
 const ResponsiveNavbar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [isLogin, setIsLogin] = useState(false)
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -29,6 +31,16 @@ const ResponsiveNavbar = () => {
 
     setAnchorElNav(null);
   };
+
+  useEffect(()=>{
+    const url =  window.location.href.split('/')
+    if (url[url.length - 1] === 'login') {
+      setIsLogin(true)
+      console.log("Yes it is login")
+    }
+
+    console.log(isLogin)
+  }, [])
 
   return (
     <AppBar position="static">
@@ -72,9 +84,11 @@ const ResponsiveNavbar = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              <MenuItem key='upload' onClick={() => {handleCloseNavMenu(0)}}>
-                <Link href="/upload">Upload</Link>
-              </MenuItem>
+              { false && (
+                  <MenuItem key='conferences' onClick={() => {handleCloseNavMenu(0)}}>
+                    <Link href="/conferences">Conferences</Link>
+                  </MenuItem>
+            )}
               <MenuItem key='logout' onClick={() => {handleCloseNavMenu(1)}}>
                 <Link href="/login">Logout</Link>
               </MenuItem>

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Typography, TextField, Button, Container, Autocomplete} from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function UploadPage() {
 
   const navigate = useNavigate();
+  const location = useLocation();
   
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -19,7 +20,12 @@ function UploadPage() {
   const [start_render, setart] = useState(true)
 
   useEffect(() => {
-    if (start_render) {login_check(); setart(false)}
+    if (start_render) {
+      login_check(); 
+      setart(false);
+      
+
+    }
   }, [login_check, setart, start_render])
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -27,6 +33,8 @@ function UploadPage() {
   const [abstract, setAbstract] = useState("");
   const [authors, setAuthors] = useState([]);
   const [title, setTitle] = useState("");
+  const [conferenceTitle, setConferenceTitle] = useState("");
+  const [conferenceDetails, setConferenceDetails] = useState("");
 
   const [users, setUsers] = useState([]);
 
@@ -46,7 +54,13 @@ function UploadPage() {
 
     }catch(err){
       console.log(err)
-    }}
+    }
+    
+    if (location.state) {
+      setConferenceTitle(location.state.conference_name)
+      setConferenceDetails(location.state.conference_details)
+    }
+  }
     func()
   }, [])
 
@@ -95,13 +109,13 @@ function UploadPage() {
   return (
     <Container maxWidth="md" style={{ padding: "20px" }}>
       <Typography variant="h1" gutterBottom style={{ textAlign: "center", textIndent: "20px" }}>
-        Conference Details
+        {conferenceTitle}
       </Typography>
       <Typography variant="subtitle1" gutterBottom style={{ fontWeight: "bold" }}>
         Description:
       </Typography>
       <Typography variant="body2" gutterBottom>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis commodo nunc vitae ex commodo, non sollicitudin eros ultrices. Fusce non mauris vel velit lobortis auctor.
+        {conferenceDetails}
       </Typography>
       <Typography variant="subtitle1" gutterBottom style={{ fontWeight: "bold" }}>
         Website:

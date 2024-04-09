@@ -5,7 +5,8 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import UploadPage from './pages/UploadPage';
 import Admin from './pages/Admin';
-import Navbar from './components/Navbar';
+import ConferenceList from './pages/Conferences';
+import ResponsiveNavbar from './components/Navbar';
 import Footer from './components/Footer';
 import ReviewPage from './pages/ReviewPage';
 
@@ -13,7 +14,7 @@ import ReviewPage from './pages/ReviewPage';
 function App() {
   return (
     <div className="App">
-      <Navbar />
+      <ResponsiveNavbar />
       <div className="pages">
         <BrowserRouter>
           <Routes>
@@ -45,6 +46,10 @@ function App() {
             <Route 
               path = "/admin"
               element = {<Admin />}
+            />
+            <Route 
+              path = "/conferences"
+              element = {<ConferenceList />}
             />
           </Routes>
         </BrowserRouter>
