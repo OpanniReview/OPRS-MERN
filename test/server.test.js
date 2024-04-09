@@ -6,7 +6,7 @@ const {app} = require('./../backend/server');
 const Credential = require("../backend/models/credentialSchema");
 const User = require("../backend/models/UserSchema");
 const Paper = require("../backend/models/paperSchema")
-const {todos, users} = require('./seed/seed')
+const {users} = require('./seed/seed')
 
 var expect = expect2.expect;
 
@@ -23,7 +23,6 @@ describe('POST /signup', () => {
       .send(users[0])
       .expect((res) => {
         expect(res.body.status).toBe(text);
-        console.log(res.body);
 
       })
       .end((err, res) => {

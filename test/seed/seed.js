@@ -12,12 +12,6 @@ const users = [{
   password: "usertwopassword"
 }]
 
-const todos = [{
-  text: "First test todo"
-}, {
-  text: "Second test todo"
-}];
-
 // var populateTodos = (done) => {
 //   Todo.remove({}).then(() => {
 //     return Todo.insertMany(todos);
@@ -34,8 +28,5 @@ const todos = [{
 // };
 
 module.exports = {
-  todos,
-//   populateTodos,
-  users,
-//   populateUsers
+  users
 }
