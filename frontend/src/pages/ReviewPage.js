@@ -159,7 +159,7 @@ function ReviewPage() {
             setTitle(response.title)
             setReviewers([...Reviewers, ...response.reviewers])
             setPublished(response.isPublished)
-            console.log(response.reviewers);
+            console.log(response.isPublished);
             
           } else {
             alert('Error uploading file');
@@ -207,7 +207,7 @@ function ReviewPage() {
       <Typography variant="h4" gutterBottom style={{ textAlign: "left"}}>
         {title} <IconButton onClick={viewPDF}><ArticleIcon variant="contained">Access PDF</ArticleIcon></IconButton>
 
-       {(published) && <Typography variant="body2" gutterBottom>
+       {(published === "true" || isAdmin) && <Typography variant="body2" gutterBottom>
         Authors: {Authors.toString()}
         </Typography>}
       </Typography>
@@ -264,7 +264,7 @@ function ReviewPage() {
           </>)
       }
       {
-        isAdmin &&
+        isAdmin && (Reviewers.length !== 0) && (published !== "true") &&
         (
           <>
             <Button variant="contained" color="success" component="span" onClick={handlePublish}>

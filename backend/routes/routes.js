@@ -16,6 +16,8 @@ router.post("/signup", async (req, res) => {
   const email = req.body.login_id;
   const password = req.body.password;
 
+  console.log(email)
+
   try {
     if (!email || !password) {
       throw Error('All fields must be filled')
@@ -76,7 +78,7 @@ router.post("/register", async (req, res) => {
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(password, salt)
 
-    const credential = await Credential.create({ login_id:email, password:hash });
+    const credential = await Credential.create({ login_id, password:hash });
 
 
     if (!first_name || !last_name || !gender || !degree || !profession) {

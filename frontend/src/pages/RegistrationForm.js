@@ -23,8 +23,6 @@ const Registerationform = () => {
   const location = useLocation();
 
   const user = JSON.parse(localStorage.getItem('user'));
-
-  
   
   // info from register page
   const [login_id, setLogin] = useState("")
@@ -67,6 +65,7 @@ const Registerationform = () => {
   };
 
   useEffect(() => {
+    console.log(user);
     if (user) { setLogin(user.login_id) }
     else { navigate('/login', {required: true}) }
 
