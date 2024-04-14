@@ -195,9 +195,9 @@ router.get('/upload', async(req, res) => {
 
 })
 
-router.get('/profile', async (req, res) => {
+router.post('/profile', async (req, res) => {
   try {
-    const user = await User.findOne({ login_id: req.params.loginId });
+    const user = await User.findOne({ login_id: req.body.loginId });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
