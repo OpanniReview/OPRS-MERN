@@ -7,9 +7,9 @@ import UploadPage from './pages/UploadPage';
 import Admin from './pages/Admin';
 import ConferenceList from './pages/Conferences';
 import ResponsiveNavbar from './components/Navbar';
+import ProfilePage from './pages/Profile';
 import Footer from './components/Footer';
 import ReviewPage from './pages/ReviewPage';
-
 
 function App() {
   return (
@@ -50,6 +50,10 @@ function App() {
             <Route 
               path = "/conferences"
               element = {<ConferenceList />}
+            />
+            <Route 
+              path = "/profile"
+              element = {<ProfilePage />}
             />
           </Routes>
         </BrowserRouter>
