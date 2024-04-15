@@ -13,8 +13,8 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import { useState, useEffect } from 'react';
 
-const pages = ['conferences', 'logout'];
-const href_pages = ['conferences', 'login'];
+const pages = ['conferences', 'profile', 'logout'];
+const href_pages = ['conferences', 'profile', 'login'];
 
 const ResponsiveNavbar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -89,6 +89,9 @@ const ResponsiveNavbar = () => {
                     <Link href="/conferences">Conferences</Link>
                   </MenuItem>
             )}
+              <MenuItem key='profile' >
+                <Link href="/profile">Profile</Link>
+              </MenuItem>
               <MenuItem key='logout' onClick={() => {handleCloseNavMenu(1)}}>
                 <Link href="/login">Logout</Link>
               </MenuItem>
@@ -108,7 +111,7 @@ const ResponsiveNavbar = () => {
               <Box key={index} sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
                 <Button
                   key={page.toUpperCase()}
-                  onClick={(event) => handleCloseNavMenu(index)}
+                  // onClick={(event) => handleCloseNavMenu(index)}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                   href={`/${href_pages[index]}`}
                 >
