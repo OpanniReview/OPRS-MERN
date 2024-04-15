@@ -32,7 +32,7 @@ const NotificationsPage = () => {
                 content: result.notifications[i].content,
               })
             }
-            setNotifications([...notifications, ...temp_blogs])
+            setNotifications([...notifications, ...temp_blogs.reverse()])
           }          
           
       } catch(error) {

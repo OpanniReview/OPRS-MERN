@@ -192,16 +192,21 @@ router.post('/upload', upload.single('file'), async(req, res) => {
 
     // Sending notification
 
-    // notif_result = await Notification.findById({login_id})
+    let notif_result = await Notification.findOne({login_id})
     
-    // if(!notif_result){throw Error("No notifications document for this loginId")}
-
-    // const notif_content = notif_result.content
-    // const notif_title = 'Paper titled ' + title +
-    // notif_content.push({
-    //   title: 'Paper submitted'
-    // })
-
+    if(!notif_result){throw Error("No notifications document for this loginId")}
+    
+    const notif_title = 'Paper titled ' + title + ' submitted for review'
+    const notif_content = 'Paper titled ' + title + ' submitted for review. It will be assigned to reviewers shortly after the admin approves.'
+    
+    notif_result.content.push({
+      title: notif_title,
+      content: notif_content
+    })
+    
+    update_notif_result = await Notification.findOneAndReplace({login_id}, notif_result)
+    
+    if(!update_notif_result){throw Error("Notification not sent")}
     res.json({ status: true })
 
   } catch (error) {
