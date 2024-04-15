@@ -28,60 +28,57 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (uploadedpage) {
-      if (user) { setLogin(user.login_id) }
-      else { navigate('/login', {required: true}) }
+    if (user) { setLogin(user.login_id) }
+    else { navigate('/login', {required: true}) }
 
-      async function func() {
-        
-          try {
-            let result = await fetch(
-              'http://localhost:4000/fetchallpapers', {
-                method: "post",
-                body: JSON.stringify({ login_id: user.login_id }),
-                headers: {
-                  'Content-Type': 'application/json'
-                }
-              });
-              result = await result.json();
-    
-              let temp_blogs = []
-              let temp_blogs1 = []
-    
-              if (result.blogs) {
-                for(let i=0; i < result.blogs.length; i++) {
-                  temp_blogs.push({
-                    title: result.blogs[i].title,
-                    coAuthors: result.blogs[i].authors,
-                    id: result.blogs[i]._id
-                  })
-                }
-                setPublishedBlogs([...publishedBlogs, ...temp_blogs])
+    async function func() {
+      
+        try {
+          let result = await fetch(
+            'http://localhost:4000/fetchallpapers', {
+              method: "post",
+              body: JSON.stringify({ login_id: user.login_id }),
+              headers: {
+                'Content-Type': 'application/json'
               }
-              
-              if(result.reviewPapers){
-                for(let i=0; i < result.reviewPapers.length; i++) {
-                  temp_blogs1.push({
-                    title: result.reviewPapers[i].title,
-                    coAuthors: result.reviewPapers[i].authors,
-                    id: result.reviewPapers[i]._id
-                  })
-                  
-                }
-                setReviewBlogs([...reviewBlogs, ...temp_blogs1])
+            });
+            result = await result.json();
+  
+            let temp_blogs = []
+            let temp_blogs1 = []
+  
+            if (result.blogs) {
+              for(let i=0; i < result.blogs.length; i++) {
+                temp_blogs.push({
+                  title: result.blogs[i].title,
+                  coAuthors: result.blogs[i].authors,
+                  id: result.blogs[i]._id
+                })
               }
-              
-              
-          } catch(error) {
-            console.log(error);
-          }
+              setPublishedBlogs([...publishedBlogs, ...temp_blogs])
+            }
+            
+            if(result.reviewPapers){
+              for(let i=0; i < result.reviewPapers.length; i++) {
+                temp_blogs1.push({
+                  title: result.reviewPapers[i].title,
+                  coAuthors: result.reviewPapers[i].authors,
+                  id: result.reviewPapers[i]._id
+                })
+                
+              }
+              setReviewBlogs([...reviewBlogs, ...temp_blogs1])
+            }
+            
+            
+        } catch(error) {
+          console.log(error);
         }
+      }
 
-        func();
-        setUploadedPage(false)
-    }
+      func();
         
-  }, [login_id, navigate, publishedBlogs, reviewBlogs, uploadedpage, user]) 
+  }, []) 
 
   return (
     <Box mt={4}>
