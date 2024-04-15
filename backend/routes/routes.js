@@ -440,11 +440,35 @@ router.post('/adminPublish', async(req, res) => {
     if(paper_id ){
       paper_details = await Paper.findOne({_id: paper_id})
       paper_details.isPublished = isPublished;
-      
+
       update_result = await Paper.findOneAndReplace({_id: paper_id}, paper_details);
       console.log(paper_details)
       if (!update_result) {
         throw Error("Couldn't publish paper")
+      }
+
+
+      const authors = paper_details.authors
+      if(authors.length > 0){
+
+        for(let i=0; i < authors.length; i++){
+          let notif_result = await Notification.findOne({login_id: authors[i]})
+          
+          if(!notif_result){throw Error("No notifications document for this loginId")}
+          
+          const notif_title = 'Congratulations! Paper titled \'' + paper_details.title + '\' has been accepted'
+          const notif_content = 'Paper titled \'' + paper_details.title + '\' has been accepted into the conference. The paper is now officially part of the conference.'
+          
+          notif_result.content.push({
+            title: notif_title,
+            content: notif_content
+          })
+          
+          const update_notif_result = await Notification.findOneAndReplace({login_id: authors[i]}, notif_result)
+          
+          if(!update_notif_result){throw Error("Notification not sent")}
+        }
+        
       }
     }
 
