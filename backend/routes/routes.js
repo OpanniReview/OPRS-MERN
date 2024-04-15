@@ -16,8 +16,6 @@ router.post("/signup", async (req, res) => {
   const email = req.body.login_id;
   const password = req.body.password;
 
-  console.log(email)
-
   try {
     if (!email || !password) {
       throw Error('All fields must be filled')
@@ -395,7 +393,6 @@ router.post('/adminPublish', async(req, res) => {
       paper_details.isPublished = isPublished;
       
       update_result = await Paper.findOneAndReplace({_id: paper_id}, paper_details);
-      console.log(paper_details)
       if (!update_result) {
         throw Error("Couldn't publish paper")
       }
@@ -420,7 +417,6 @@ router.post('/adminReject', async(req, res) => {
       paper_details.isPublished = isPublished;
       
       update_result = await Paper.findOneAndReplace({_id: paper_id}, paper_details);
-      console.log(paper_details)
       if (!update_result) {
         throw Error("Couldn't publish paper")
       }
