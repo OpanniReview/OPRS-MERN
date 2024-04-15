@@ -71,8 +71,6 @@ function UploadPage() {
   };
   
   const handleSubmit = async (event) => {
-    console.log(authors);
-
     if (!selectedFile) {
       alert('Please select a file');
       return;
