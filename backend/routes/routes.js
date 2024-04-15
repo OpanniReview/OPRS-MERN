@@ -1,7 +1,8 @@
 const express = require("express");
 const Credential = require("../models/credentialSchema");
 const User = require("../models/UserSchema");
-const Paper = require("../models/paperSchema")
+const Paper = require("../models/paperSchema");
+const Notification = require("../models/notificationSchema");
 const bcrypt = require('bcrypt')
 const validator = require('validator')
 const multer = require('multer')
@@ -106,6 +107,19 @@ router.post("/register", async (req, res) => {
     }
 
     const user = await User.create({ login_id: login_id, first_name: first_name, last_name: last_name, gender: gender, dob: dob, additional_email: email, degrees_completed: degree, personal_links: personal_link, professional_status: profession});
+
+    const title = 'Welcome ' + first_name + ' ' + last_name
+    //  Create a document for notifications
+    const notif = await Notification.create({
+      login_id: login_id,
+      content: [{
+        title: title,
+        content: 'Thank you for registering with us. You can upload new papers by clicking on Conferences in the navbar. Upon submission for review, your paper will be assigned reviewers who will decide upon your paper.'
+      }]
+    })
+
+    // const res = await User.findById({login_id})
+    console.log("Registeration", res)
     res.json({status: !(!(user))});
   } catch (error) {
     console.log(error.message)
@@ -175,6 +189,18 @@ router.post('/upload', upload.single('file'), async(req, res) => {
         throw Error("Couldn't publish paper to the author")
       }
     }
+
+    // Sending notification
+
+    // notif_result = await Notification.findById({login_id})
+    
+    // if(!notif_result){throw Error("No notifications document for this loginId")}
+
+    // const notif_content = notif_result.content
+    // const notif_title = 'Paper titled ' + title +
+    // notif_content.push({
+    //   title: 'Paper submitted'
+    // })
 
     res.json({ status: true })
 
@@ -390,6 +416,28 @@ router.post('/addcomment', async(req, res) => {
     console.log(error.message);
     res.json({status:false});
   }
+})
+
+router.post('/fetchnotifications', async(req, res) => {
+  try{
+    const login_id = req.body.login_id;
+
+    let resultNew = await Notification.find({login_id});
+    if (!resultNew) {
+      throw Error("User not found");
+    }
+    
+    console.log("Notifications result", resultNew, login_id)
+    result = resultNew[0].content;
+    res.json({
+      notifications: result,
+      status: true
+    })
+  } catch(error) {
+    console.log(error.message);
+    res.json({status: false});
+  }
+
 })
 
 module.exports = router;
