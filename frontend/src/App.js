@@ -10,6 +10,7 @@ import ResponsiveNavbar from './components/Navbar';
 import ProfilePage from './pages/Profile';
 import Footer from './components/Footer';
 import ReviewPage from './pages/ReviewPage';
+import ViewPublishedPapers from './pages/ViewPublishedPapers';
 
 function App() {
   return (
@@ -54,6 +55,10 @@ function App() {
             <Route 
               path = "/profile"
               element = {<ProfilePage />}
+            />
+            <Route 
+              path = "/papers"
+              element = {<ViewPublishedPapers />}
             />
           </Routes>
         </BrowserRouter>

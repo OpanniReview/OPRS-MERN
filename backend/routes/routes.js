@@ -306,6 +306,25 @@ router.post('/fetchallpapersAdmin', async(req, res) => {
 
 })
 
+router.post('/fetchallpublishedpapers', async(req, res) => {
+  try{
+
+    let resultPub = await Paper.find({reviewers: {$ne:[]}, isPublished:true});
+    if (!resultPub) {
+      throw Error("Papers empty");
+    }
+
+    res.json({
+      status: true, blogs: resultPub
+    })
+
+  } catch(error) {
+    console.log(error.message);
+    res.json({status: false});
+  }
+
+})
+
 router.post('/getpaperdetails', async(req, res) => {
 
   try {
