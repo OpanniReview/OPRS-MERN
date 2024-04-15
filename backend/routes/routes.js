@@ -490,6 +490,34 @@ router.post('/addcomment', async(req, res) => {
       result = result[0];
       result.comments = req.body.comment;
       let update_result = await Paper.findOneAndReplace({_id: paper_id}, result);
+
+      // Send notification to author upon comment by reviewer
+
+      const authors = result.authors
+      const title = result.title
+
+      if(authors.length > 0){
+        console.log("Adding notifications to the authors on comment from reviewer")
+        for(let i=0; i < authors.length; i++){
+          let notif_result = await Notification.findOne({login_id: authors[i]})
+          
+          if(!notif_result){throw Error("No notifications document for this loginId")}
+          
+          const notif_title = 'Update on paper titled \'' + title + '\''
+          const notif_content = 'Paper titled \'' + title + '\' has received a comment. Please have a look at the review by clicking on the paper tab.'
+          
+          notif_result.content.push({
+            title: notif_title,
+            content: notif_content
+          })
+          
+          const update_notif_result = await Notification.findOneAndReplace({login_id: authors[i]}, notif_result)
+          
+          if(!update_notif_result){throw Error("Notification not sent")}
+        }
+        
+      }
+
       if (update_result) {
         res.json({
           status: true
