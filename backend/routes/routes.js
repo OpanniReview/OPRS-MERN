@@ -190,23 +190,28 @@ router.post('/upload', upload.single('file'), async(req, res) => {
       }
     }
 
-    // Sending notification
+    // Sending notification to authors one by one
+    if(authors.length > 0){
 
-    let notif_result = await Notification.findOne({login_id})
-    
-    if(!notif_result){throw Error("No notifications document for this loginId")}
-    
-    const notif_title = 'Paper titled ' + title + ' submitted for review'
-    const notif_content = 'Paper titled ' + title + ' submitted for review. It will be assigned to reviewers shortly after the admin approves.'
-    
-    notif_result.content.push({
-      title: notif_title,
-      content: notif_content
-    })
-    
-    update_notif_result = await Notification.findOneAndReplace({login_id}, notif_result)
-    
-    if(!update_notif_result){throw Error("Notification not sent")}
+      for(let i=0; i < authors.length; i++){
+        let notif_result = await Notification.findOne({login_id: authors[i]})
+        
+        if(!notif_result){throw Error("No notifications document for this loginId")}
+        
+        const notif_title = 'Paper titled \'' + title + '\' submitted for review'
+        const notif_content = 'Paper titled \'' + title + '\' submitted for review. It will be assigned to reviewers shortly after the admin approves.'
+        
+        notif_result.content.push({
+          title: notif_title,
+          content: notif_content
+        })
+        
+        const update_notif_result = await Notification.findOneAndReplace({login_id: authors[i]}, notif_result)
+        
+        if(!update_notif_result){throw Error("Notification not sent")}
+      }
+      
+    }
     res.json({ status: true })
 
   } catch (error) {
@@ -337,8 +342,14 @@ router.post('/adminUpload', async(req, res) => {
   try{
     const reviewers = req.body.reviewers;
     const paper_id = req.body.paper_id;
+    let paper_details = ""
+    let paper_title = ""
 
+    // storing the paper to be reviewed in the authors section
     if(paper_id && reviewers.length > 0){
+      paper_details = await Paper.findOne({_id: paper_id})
+      paper_title = paper_details.title
+
       for(let i=0; i<reviewers.length; i++){
         user_details = await User.findOne({login_id: reviewers[i]})
 
@@ -353,17 +364,65 @@ router.post('/adminUpload', async(req, res) => {
         if (!update_result) {
           throw Error("Couldn't assign paper to author")
         }
+
+        // Sending notification to reviewers
+        let notif_result = await Notification.findOne({login_id: reviewers[i]})
+        
+        if(!notif_result){throw Error("No notifications document for this loginId")}
+        
+        const notif_title = 'You have been assigned the paper titled \'' + paper_title + '\' for review'
+        const notif_content = 'Paper titled \'' + paper_title + '\' has been assigned to you for review. Please register your review on the paper by going to the \'Papers To Review\' section.'
+        
+        notif_result.content.push({
+          title: notif_title,
+          content: notif_content
+        })
+        
+        update_notif_result = await Notification.findOneAndReplace({login_id: reviewers[i]}, notif_result)
+        
+        if(!update_notif_result){throw Error("Notification not sent to reviewer")}
       }
 
-      paper_details = await Paper.findOne({_id: paper_id})
+      
       paper_details.reviewers = reviewers;
       
       update_result = await Paper.findOneAndReplace({_id: paper_id}, paper_details);
       if (!update_result) {
         throw Error("Couldn't assign paper to author")
-      }
+      }      
     }
+    
+    // Sending notification to authors
+    const authors = paper_details.authors
 
+    if (paper_id && authors.length > 0){
+
+      for(let i=0; i<authors.length; i++){
+        let user_details = await User.findOne({login_id: authors[i]})
+
+        if (!user_details) {
+          throw Error("User not found")
+        }
+
+        // Sending notification to authors one at a time
+        let notif_result = await Notification.findOne({login_id: authors[i]})
+        
+        if(!notif_result){throw Error("No notifications document for this loginId")}
+        
+        const notif_title = 'Your paper titled \'' + paper_title + '\' has been assigned for review'
+        const notif_content = 'Paper titled \'' + paper_title + '\' has been assigned for review. Please wait for the reviewers to give their reviews.'
+        
+        notif_result.content.push({
+          title: notif_title,
+          content: notif_content
+        })
+        
+        update_notif_result = await Notification.findOneAndReplace({login_id: authors[i]}, notif_result)
+        
+        if(!update_notif_result){throw Error("Notification not sent to reviewer")}
+      }
+
+    }
     res.json({ status: true })
 
   } catch(error) {
