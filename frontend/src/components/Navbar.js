@@ -13,8 +13,8 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import { useState, useEffect } from 'react';
 
-const pages = ['conferences', 'profile', 'logout'];
-const href_pages = ['conferences', 'profile', 'login'];
+const pages = ['conferences', 'view paper', 'profile', 'logout'];
+const href_pages = ['conferences', 'papers', 'profile', 'login'];
 
 const ResponsiveNavbar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -89,6 +89,9 @@ const ResponsiveNavbar = () => {
                     <Link href="/conferences">Conferences</Link>
                   </MenuItem>
             )}
+              <MenuItem key='view paper' >
+                <Link href="/papers">View Papers</Link>
+              </MenuItem>
               <MenuItem key='profile' >
                 <Link href="/profile">Profile</Link>
               </MenuItem>

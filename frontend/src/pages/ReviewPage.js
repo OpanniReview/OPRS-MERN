@@ -5,6 +5,7 @@ import ArticleIcon from '@mui/icons-material/Article';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
+import Grid from '@mui/material/Grid';
 
 // import Comment from "../components/Comment";
 
@@ -31,6 +32,9 @@ function ReviewPage() {
   const [login_id, setLogin] = useState("")
   const [start_render, setart] = useState(true)
   
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [fileName, setFileName] = useState(null);
+
   const viewPDF = async () => {
     window.open(url, '_blank');
   }
@@ -124,6 +128,73 @@ function ReviewPage() {
     } 
   }
 
+  const handleReject = async (event) => {
+    
+    event.preventDefault();
+
+    const msg = {
+      paper_id : paperId,
+      isPublished : "deleted"
+    }
+
+    try {
+
+      let response = await fetch('http://localhost:4000/adminReject', {
+        method: 'POST',
+        body: JSON.stringify(msg),
+        headers:{
+          'Content-Type': 'application/json'
+        }
+      });
+
+      response = await response.json();
+      if (response.status) {
+        navigate('/admin', {replace: true});
+        
+      } else {
+        throw Error("Paper not published");
+      }
+    } catch (error) {
+      console.log(error.message);
+    } 
+  }
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+    setFileName(event.target.value);
+  };  
+
+  const handleReupload = async(event) => {
+    if (!selectedFile) {
+      alert('Please select a file');
+      return;
+    }
+
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('paperid', paperId)
+
+    try {
+      let response = await fetch('http://localhost:4000/reupload', {
+        method: 'POST',
+        body: formData
+      });
+
+      response = await response.json();
+      if (response.status) {
+        navigate('/dashboard', {replace: true});
+        
+      } else {
+        alert('Error uploading file');
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Error uploading file');
+    }
+  }
+
   useEffect(() => {
     if (start_render) {
       if (user) { setLogin(user.login_id) }
@@ -155,7 +226,7 @@ function ReviewPage() {
             setAbstract(response.abstract);
             setCommentsList([...publishedComments, ...response.comments]);
             setTempComments([...tempComments, ...response.comments])
-            setAuthors(response.authors)
+            setAuthors([...Authors, ...response.authors])
             setTitle(response.title)
             setReviewers([...Reviewers, ...response.reviewers])
             setPublished(response.isPublished)
@@ -264,11 +335,47 @@ function ReviewPage() {
           </>)
       }
       {
-        isAdmin && (Reviewers.length !== 0) && (published !== "true") &&
+        isAdmin && (Reviewers.length !== 0) && (published === "false") &&
         (
           <>
             <Button variant="contained" color="success" component="span" onClick={handlePublish}>
                 Publish Paper
+            </Button>
+            <Button variant="contained" color="success" component="span" onClick={handleReject}>
+                Reject Paper
+            </Button>
+          </>
+        )
+      }
+      {
+        (Authors.includes(login_id)) && (published === "false") &&
+        (
+          <>
+            <Grid
+              container
+              direction="column"
+              justifyContent="center"
+              alignItems="flex-start"
+            >
+              <input
+                accept=".pdf,.docx"
+                style={{ display: "none" }}
+                id="upload-file"
+                // multiple
+                type="file"
+                onChange={handleFileChange}
+              />
+              <label htmlFor="upload-file">
+                <Button variant="contained" component="span">
+                  Select File
+                </Button>
+              </label>
+              <Typography variant="caption">
+                {fileName ? fileName.replace('C:\\fakepath\\', '') : ''}
+              </Typography>
+            </Grid>
+            <Button variant="contained" color="success" component="span" onClick={handleReupload}>
+                Reupload Paper
             </Button>
           </>
         )
