@@ -17,6 +17,8 @@ const pages = ['conferences', 'view paper', 'profile', 'logout'];
 const href_pages = ['conferences', 'papers', 'profile', 'login'];
 
 const ResponsiveNavbar = () => {
+  const url_ = window.location.pathname.split('/').pop();
+  const [currentUrl, setCurrentUrl] = useState(url_)
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [isLogin, setIsLogin] = useState(false)
 
@@ -40,7 +42,7 @@ const ResponsiveNavbar = () => {
     }
 
     console.log(isLogin)
-  }, [])
+  }, [currentUrl])
 
   return (
     <AppBar position="static">
@@ -108,7 +110,7 @@ const ResponsiveNavbar = () => {
           >
             LOGO
           </Typography>
-          {
+          {/* {
             pages.map((page, index) => {
               return (
               <Box key={index} sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
@@ -123,7 +125,52 @@ const ResponsiveNavbar = () => {
               </Box>
               )
             })
-          }
+          } */}
+          { !isLogin && (
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
+              <Button
+                key='Conferences'
+                sx={{ my: 2, color: 'white', display: 'block' }}
+                href='/conferences'
+              >
+                Conferences
+              </Button>
+            </Box>
+            )}
+          { !isLogin && (
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
+              <Button
+                key='viewPapers'
+                sx={{ my: 2, color: 'white', display: 'block' }}
+                href='/papers'
+              >
+                View Papers
+              </Button>
+            </Box>
+            )}
+          { !isLogin && (
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
+              <Button
+                key='Profile'
+                sx={{ my: 2, color: 'white', display: 'block' }}
+                href='/profile'
+              >
+                Profile
+              </Button>
+            </Box>
+            )}
+          { !isLogin && (
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
+              <Button
+                key='Logout'
+                sx={{ my: 2, color: 'white', display: 'block' }}
+                href='/login'
+              >
+                Logout
+              </Button>
+            </Box>
+            )}
+
         </Toolbar>
       </Container>
     </AppBar>
