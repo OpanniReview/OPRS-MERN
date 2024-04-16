@@ -35,14 +35,23 @@ const ResponsiveNavbar = () => {
   };
 
   useEffect(()=>{
-    const url =  window.location.href.split('/')
-    if (url[url.length - 1] === 'login') {
-      setIsLogin(true)
-      console.log("Yes it is login")
+    const url1 =  window.location.href
+    const url = url1.split('/')
+    if (url1 !== currentUrl) {
+      setCurrentUrl(url1)
+
+      if (url[url.length - 1] === 'login') {
+        setIsLogin(true)
+      } 
+      if (url[url.length - 1] !== 'login') {
+        setIsLogin(false)
+      }
+
     }
 
-    console.log(isLogin)
-  }, [currentUrl])
+    console.log("Hello", url1)
+
+  }, [currentUrl, window.location.href])
 
   return (
     <AppBar position="static">

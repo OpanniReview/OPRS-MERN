@@ -106,7 +106,7 @@ const Dashboard = () => {
           {tabValue === 0 && (
             <>
               {publishedBlogs.map((blog, index) => (
-                <Link key={index} href={`/review/${blog.id}`} >
+                <Link key={index} href={`/review/${blog.id}`} style={{ textDecoration: 'none' }}>
                   <Box key={index} sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, mb: 2 }}>
                     <Typography variant="h6" gutterBottom>
                       {blog.title}
@@ -123,7 +123,7 @@ const Dashboard = () => {
           {tabValue === 1 && (
             <>
               {reviewBlogs.map((blog, index) => (
-                <Link key={index} href={`/review/${blog.id}`} >
+                <Link key={index} href={`/review/${blog.id}`} style={{ textDecoration: 'none' }}>
                   <Box key={index} sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1, mb: 2 }}>
                     <Typography variant="h6" gutterBottom>
                       {blog.title}

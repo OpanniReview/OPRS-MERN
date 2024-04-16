@@ -92,11 +92,8 @@ const Admin = () => {
         }
   
         setPublishedBlogs([...publishedBlogs, ...temp_blogs_2]);
-        console.log("Published: ", publishedBlogs)
 
       }
-
-      console.log(result)
     } catch (error) {
       console.log(error);
     }
@@ -115,13 +112,8 @@ const Admin = () => {
 
   return (
     <Box mt={4}>
-      <Grid container spacing={2}>
-        {/* Left column */}
-        <Grid item xs={12} md={4}>
-          {/* <NotificationsPage /> */}
-        </Grid>
-        {/* Right column */}
-        <Grid item xs={12} md={8}>
+      <Grid container justifyContent={'center'}>
+        <Grid>
           {/* Tabs for switching between published and draft blogs */}
           <AppBar position="static" color="default">
             <Tabs
@@ -140,7 +132,7 @@ const Admin = () => {
           {tabValue === 0 && (
             <>
               {submittedBlogs.map((blog, index) => (
-                <Link key={index} href={`/review/${blog.id}`}>
+                <Link key={index} href={`/review/${blog.id}`} style={{ textDecoration: 'none' }}>
                   <Box
                     key={index}
                     sx={{
@@ -166,7 +158,7 @@ const Admin = () => {
           {tabValue === 1 && (
             <>
               {draftBlogs.map((blog, index) => (
-                <Link key={index} href={`/review/${blog.id}`}>
+                <Link key={index} href={`/review/${blog.id}`} style={{ textDecoration: 'none' }}>
                   <Box
                     key={index}
                     sx={{
@@ -192,7 +184,7 @@ const Admin = () => {
           {tabValue === 2 && (
             <>
               {publishedBlogs.map((blog, index) => (
-                <Link key={index} href={`/review/${blog.id}`}>
+                <Link key={index} href={`/review/${blog.id}`} style={{ textDecoration: 'none' }}>
                   <Box
                     key={index}
                     sx={{

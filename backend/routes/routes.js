@@ -116,8 +116,6 @@ router.post("/register", async (req, res) => {
       }]
     })
 
-    // const res = await User.findById({login_id})
-    console.log("Registeration", res)
     res.json({status: !(!(user))});
   } catch (error) {
     console.log(error.message)
@@ -561,7 +559,6 @@ router.post('/addcomment', async(req, res) => {
       const title = result.title
 
       if(authors.length > 0){
-        console.log("Adding notifications to the authors on comment from reviewer")
         for(let i=0; i < authors.length; i++){
           let notif_result = await Notification.findOne({login_id: authors[i]})
           
@@ -607,7 +604,6 @@ router.post('/fetchnotifications', async(req, res) => {
       throw Error("User not found");
     }
     
-    console.log("Notifications result", resultNew, login_id)
     result = resultNew[0].content;
     res.json({
       notifications: result,

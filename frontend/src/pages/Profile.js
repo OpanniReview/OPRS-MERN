@@ -8,10 +8,8 @@ const ProfilePage = () => {
 
   useEffect(() => {
 
-    console.log(loginId)
     const fetchUser = async () => {
       try {
-        console.log("Fetching User")
         const response = await fetch(
           'http://localhost:4000/profile/', {
             method: "post",
@@ -25,8 +23,6 @@ const ProfilePage = () => {
         }
         
         const userData = await response.json();
-        console.log("Fetching User Done")
-        console.log(userData);
         setUser(userData);
       } catch (error) {
         console.error('Error fetching user:', error);
