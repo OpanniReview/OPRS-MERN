@@ -86,11 +86,9 @@ const ResponsiveNavbar = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              { false && (
-                  <MenuItem key='conferences' onClick={() => {handleCloseNavMenu(0)}}>
-                    <Link href="/conferences">Conferences</Link>
-                  </MenuItem>
-            )}
+              <MenuItem key='conferences' onClick={() => {handleCloseNavMenu(0)}}>
+                <Link href="/conferences">Conferences</Link>
+              </MenuItem>
               <MenuItem key='view paper' >
                 <Link href="/papers">View Papers</Link>
               </MenuItem>
