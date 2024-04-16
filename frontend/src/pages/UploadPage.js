@@ -34,7 +34,7 @@ function UploadPage() {
     async function func() {
     try{
       let result = await fetch(
-        'http://localhost:4000/upload', {
+        'https://oprs-mern.onrender.com/upload', {
           method: "GET",
           headers:{
             'Content-Type': 'application/json'
@@ -74,7 +74,7 @@ function UploadPage() {
     formData.append('title', title)
 
     try {
-      let response = await fetch('http://localhost:4000/upload', {
+      let response = await fetch('https://oprs-mern.onrender.com/upload', {
         method: 'POST',
         body: formData
       });

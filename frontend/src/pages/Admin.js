@@ -45,7 +45,7 @@ const Admin = () => {
 
   const func = async () => {
     try {
-      let result = await fetch("http://localhost:4000/fetchallpapersAdmin", {
+      let result = await fetch("https://oprs-mern.onrender.com/fetchallpapersAdmin", {
         method: "post",
         body: JSON.stringify({ login_id }),
         headers: {

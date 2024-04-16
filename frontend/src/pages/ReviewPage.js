@@ -38,7 +38,7 @@ function ReviewPage() {
   const addReview = async (event, index) => {
     setCommentsList([...tempComments])
     try {
-      let response = await fetch('http://localhost:4000/addcomment', {
+      let response = await fetch('https://oprs-mern.onrender.com/addcomment', {
         method: 'POST',
         body: JSON.stringify({paper_id: paperId, comment: tempComments}),
         headers: {
@@ -69,7 +69,7 @@ function ReviewPage() {
           throw Error("Select 3 reviewers")
         }
 
-        let response = await fetch('http://localhost:4000/adminUpload', {
+        let response = await fetch('https://oprs-mern.onrender.com/adminUpload', {
           method: 'POST',
           body: JSON.stringify(reviewers),
           headers:{
@@ -104,7 +104,7 @@ function ReviewPage() {
 
     try {
 
-      let response = await fetch('http://localhost:4000/adminPublish', {
+      let response = await fetch('https://oprs-mern.onrender.com/adminPublish', {
         method: 'POST',
         body: JSON.stringify(msg),
         headers:{
@@ -136,7 +136,7 @@ function ReviewPage() {
 
       async function start_func() {
         try {
-          let response = await fetch('http://localhost:4000/getpaperdetails', {
+          let response = await fetch('https://oprs-mern.onrender.com/getpaperdetails', {
             method: 'POST',
             body: JSON.stringify({paper_id: paperId}),
             headers: {
@@ -175,7 +175,7 @@ function ReviewPage() {
       async function getReviewers() {
         try{
           let result = await fetch(
-            'http://localhost:4000/upload', {
+            'https://oprs-mern.onrender.com/upload', {
               method: "GET",
               headers:{
                 'Content-Type': 'application/json'

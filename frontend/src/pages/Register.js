@@ -25,7 +25,7 @@ const Register = () => {
 
     try {
       let result = await fetch(
-        'http://localhost:4000/signup', {
+        'https://oprs-mern.onrender.com/signup', {
           method: "post",
           body: JSON.stringify({ login_id: email, password: password}),
           headers: {
